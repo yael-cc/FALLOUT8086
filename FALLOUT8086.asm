@@ -82,9 +82,10 @@ INCLUDE macrosProyecto.lib
         MOV AX, @DATA
         MOV DS, AX 
         MOV ES, AX
-        
+    ; Por defecto viene en pagina 0    
     CALL PANTALLA_FORMULARIO
     
+    ; Cambia a la pagina 1, a la pantalla principal del juego
     MOV paginaAct, 1
     CALL CAMBIAR_PAGINA
     CALL PANTALLA_JUEGO                
