@@ -1,0 +1,163 @@
+   ;=======================MACROS========================    
+    ESCRIBIR_ARCHIVO MACRO id, cuantos, buffer_hacia
+    	MOV AH, 40H
+    	MOV BX, id
+    	MOV CX, cuantos
+    	LEA DX, buffer_hacia
+    	INT 21H
+    ESCRIBIR_ARCHIVO ENDM
+    
+    LEER_ARCHIVO MACRO id, cuantos, buffer_leido
+    	MOV AH, 3FH
+    	MOV BX, id
+    	MOV CX, cuantos
+    	LEA DX, buffer_leido
+    	INT 21H
+    LEER_ARCHIVO ENDM
+    
+    ABRIR_ARCHIVO MACRO ruta, modo
+    	MOV AH, 3DH
+    	LEA DX, ruta
+    	MOV AL, modo
+    	INT 21H
+    ABRIR_ARCHIVO ENDM
+    ; MODOS DE APERTURA 0 LECTURA, 1 ESCRITURA, 2 LECTURA/ESCRITURA
+    
+    CERRRAR_ARCHIVO MACRO id
+    	MOV AH, 3FH
+    	MOV BX, id
+    	INT 21H
+    CERRAR_ARCHIVO ENDM	
+
+    
+    IMP_COLOR_CURSOR MACRO  REN, COL, TEXTO, LONG, COLOR 
+        MOV AH, 19
+        MOV AL, 0
+        LEA BP, TEXTO
+        MOV CX, LONG
+        MOV DH, REN
+        MOV DL, COL
+        MOV BH, paginaAct
+        MOV BL, COLOR
+        INT 10H                        
+    IMP_COLOR_CURSOR ENDM
+    
+    IMP_CENTRAL MACRO  LIN1, LIN2, LIN3, LIN4, LIN5
+        IMP_COLOR_CURSOR 7, 20, LIN1, largoCad, colorDestacado, paginaAct     ; Linea 1
+        IMP_COLOR_CURSOR 9, 20, LIN2, largoCad, colorDestacado, paginaAct     ; Linea 2
+        IMP_COLOR_CURSOR 11, 20, LIN3, largoCad, colorDestacado, paginaAct    ; Linea 3
+        IMP_COLOR_CURSOR 13, 20, LIN4, largoCad, colorDestacado, paginaAct    ; Linea 4
+        IMP_COLOR_CURSOR 15, 20, LIN5, largoCad, colorDestacado, paginaAct    ; Linea 5
+        MOV largoCad, 0                        
+    IMP_CENTRAL ENDM
+    
+    IMP_REGISTRO MACRO  REG1, REG2, REG3, REG4, REG5, REG6 
+        IMP_COLOR_CURSOR 20, 4, REG1, 34, colorNormal, paginaAct   ; Registro 1
+        IMP_COLOR_CURSOR 21, 4, REG2, 34, colorNormal, paginaAct   ; Registro 2
+        IMP_COLOR_CURSOR 22, 4, REG3, 34, colorNormal, paginaAct   ; Registro 3        
+        IMP_COLOR_CURSOR 20, 42, REG4, 34, colorNormal, paginaAct  ; Registro 4
+        IMP_COLOR_CURSOR 21, 42, REG5, 34, colorNormal, paginaAct  ; Registro 5
+        IMP_COLOR_CURSOR 22, 42, REG6, 34, colorNormal, paginaAct  ; Registro 6                            
+    IMP_REGISTRO ENDM
+    
+    CURSOR MACRO REN, COL
+        MOV AH, 2
+        MOV DH, REN
+        MOV DL, COL
+        MOV BH, paginaAct
+        INT 10H
+    CURSOR ENDM
+    
+    LINEA_HORIZONTAL MACRO SIMBOLO, COLOR, LONG
+        MOV AH, 09h
+        MOV AL, SIMBOLO
+        MOV BL, COLOR
+        MOV CX, LONG
+        MOV BH, paginaAct
+        INT 10h
+    LINEA_HORIZONTAL ENDM
+    
+    ESTABLECER_HISTORIAL_ACTUAL MACRO REG1, REG2, REG3, REG4, REG5, REG6
+        MOV CX, 35
+        MOV SI, 0
+        LOCAL CICLO_HIS
+        CICLO_HIS:                                                                                               
+                MOV AL, REG6[SI]
+                MOV regA6[SI], AL
+                MOV AL, REG5[SI]
+                MOV regA5[SI], AL
+                MOV AL, REG4[SI]
+                MOV regA4[SI], AL
+                MOV AL, REG3[SI]
+                MOV regA3[SI], AL 
+                MOV AL, REG2[SI]
+                MOV regA2[SI], AL
+                MOV AL, REG1[SI]
+                MOV regA1[SI], AL                                
+                INC SI
+            LOOP CICLO_HIS
+        IMP_REGISTRO regA1, regA2, regA3, regA4, regA5, regA6    
+    ESTABLECER_HISTORIAL_ACTUAL ENDM
+    
+    RECORRER_HISTORIAL MACRO REGN
+        ESTABLECER_HISTORIAL_ACTUAL REGN, regA1, regA2, regA3, regA4, regA5    
+    RECORRER_HISTORIAL ENDM
+    
+    RASTREO_TECLA MACRO
+        MOV AH, 0
+        INT 16H
+        MOV rastreo, AH
+        MOV caracter, AL
+    RASTREO_TECLA ENDM
+    
+    PEDIR_CADENA MACRO REN, COL, VARIABLE_CADENA, LONG
+        LOCAL INICIO_PCAD
+        LOCAL FIN_PCAD
+        LOCAL BORRAR_CARACTER
+        MOV SI, 0
+        MOV DH, REN
+        MOV DL, COL
+        INICIO_PCAD:
+            CMP SI, LONG
+               JE FIN_PCAD      
+            CURSOR DH, DL            
+            RASTREO_TECLA
+            MOV AH, rastreo
+            MOV AL, caracter
+            CMP AH, 0Eh
+                JE BORRAR_CARACTER
+            CMP AH, 1Ch
+                JE FIN_PCAD
+            CMP AL, 00H
+                JE INICIO_PCAD                 
+            MOV VARIABLE_CADENA[SI], AL
+            IMP_COLOR_CURSOR DH, DL, caracter, 1, colorNormal, paginaAct
+            INC DL    
+            INC SI            
+            JMP INICIO_PCAD
+        BORRAR_CARACTER:
+            CMP SI, 0
+                JE INICIO_PCAD
+            DEC SI
+            DEC DL
+            MOV simb, 0
+            IMP_COLOR_CURSOR DH, DL, simb, 1, colorNormal, paginaAct
+            JMP INICIO_PCAD            
+        FIN_PCAD:                                                         
+    PEDIR_CADENA ENDM
+    
+    IMPRIMIR_VARIABLE MACRO VARIABLE_IMPRESION, LONG
+        MOV CX, LONG
+        MOV SI, 0
+        LOCAL IMPRIMIRV
+        IMPRIMIRV: 
+            MOV AH, 5
+            MOV DL, VARIABLE_IMPRESION[SI]
+            INT 21H          
+            INC SI
+        LOOP IMPRIMIRV
+    IMPRIMIR_VARIABLE ENDM
+    
+    
+    
+   ;=====================================================
