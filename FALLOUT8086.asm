@@ -83,7 +83,9 @@ INCLUDE macrosProyecto.lib
             db 10, 13, '                                                                        ',219,223,223,223,219
             db 10, 13, '                                                                             '
             db 10, 13, '                                                                         ',223,223,223,' '
-            db 0 ; Fin de cadena                               
+            db 0 ; Fin de cadena
+    ; ============ MACROS TEMPORALES ===============        
+                                                   
 .CODE
     INICIO:
         MOV AX, @DATA
@@ -416,6 +418,9 @@ INCLUDE macrosProyecto.lib
         ; 4. Escribir en el archivo
         ESCRIBIR_ARCHIVO idDatosJugador, CX, datosJugador
         
+        ; Mostrar en LCD (Los delimitadores entre cada datos no son visibles)
+        IMPRIMIR_LCDDISPLAY datosJugador, posDatosJugador
+        CALL LIMPIAR_REGS
         RET
     ENDP
     
@@ -443,6 +448,10 @@ INCLUDE macrosProyecto.lib
 
         ; 4. Escribir en el archivo
         ESCRIBIR_ARCHIVO idDatosPartida, posDatosPartida, datosPartida
+        
+        ; Mostrar en LCD (Los delimitadores entre cada datos no son visibles)
+        IMPRIMIR_LCDDISPLAY datosPartida, posDatosPartida
+        CALL LIMPIAR_REGS
         
         RET
     ENDP

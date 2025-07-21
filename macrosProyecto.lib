@@ -252,5 +252,19 @@
             MOV POSICION, SI                         
     REEMPLAZAR_CADENA_PARTIDA ENDM
     
-    
+    IMPRIMIR_LCDDISPLAY MACRO VARIABLE, LONG 
+        ; IMPRIMIR VARIABLE
+        MOV DX, 2040H
+        MOV CX, LONG
+        MOV SI, 0
+        LOCAL CICLODIS
+        CICLODIS:
+            ; Recuperar elemento del arreglo
+            MOV AL, VARIABLE[SI]
+            OUT DX, AL
+            
+            INC DX  ;CADA CARACTER ES UN PUERTO 
+            INC SI            
+            LOOP CICLODIS
+    IMPRIMIR_LCDDISPLAY ENDM
    ;=====================================================
