@@ -7,31 +7,37 @@
 INCLUDE macrosProyecto.lib
 .MODEL SMALL
 .STACK
-.DATA   
+.DATA
+    rutaCarpeta db 'C:\FALLOUT8086',0
+    rutaDatosJugador   db 'C:\FALLOUT8086\DatosJugador.txt',0
+    rutaDatosPartida   db 'C:\FALLOUT8086\DatosPartida.txt',0   
     ren     db 0
     col     db 0
     simb    db 0
     rastreo db 0
+    num_condicion   db 0
     idDatosJugador  dw 0
     idDatosPartida  dw 0
+    cadenaDatosJug  db 100 DUP(0)
     paginaAct   db 0
     largoCad   dw 0
     caracter   db 0    
     esqIzqS db 213
     esqDerS db 184
-    rutaDatosProyecto   db 'C:\FALLOUT8086\DatosJugador.txt',0
     msjNomb db ' Nombre:             '
     msjEdad db ' Edad:               '
     msjNomJ db ' Nombre[juego]:      '
     msjGen  db ' Genero[M o F]:      '
     msjRef  db ' Nombre del refugio: '
-    msjImp  db 'Presiona ENTER para continuar o E para imprimir.'    
+    msjImp  db '     Presiona ENTER para continuar o E para imprimir.      '
+    msjMenuSalir  db 'Presiona ESC para omitir o cualquier tecla para continuar.' 
     nombre  db 30 DUP(0)
-    edad    db 2 DUP(0)
+    edad    db 3 DUP(0)
     nomJug  db 15 DUP(0)
-    genero  db 1 DUP(0)
+    genero  db 2 DUP(0)
     nombRef db 20 DUP(0)
-    datosJugador    db 68 DUP(0)        
+    datosJugador    db 80 DUP(0)
+    datosPartida    db 80 DUP(0)        
     colorNormal     db 0AH
     colorDestacado  db 0B0H  
     titulo  db 'FALLOUT 8086'
@@ -43,13 +49,13 @@ INCLUDE macrosProyecto.lib
     tEnerg  db 'Energ',161,'a:'
     tHab    db 'Habitantes:'
     tAvan   db 'Avance:'
-    rAgua   db '100'
-    rComida db '100'
-    rEnerg  db '100'
-    rAvan   db '  1%'
-    rHab    db '100'
+    rAgua   db '100',0
+    rComida db '100',0
+    rEnerg  db '100',0
+    rAvan   db '  1%',0
+    rHab    db '100',0    
+    estado  db 'ESTABLE  ',0
     msgEdo  db 'ESTADO: '
-    estado  db 'ESTABLE  '
     linea1  db 'En este espacio se encuentra el texto de'
     linea2  db 'la historia del juego que aparece       '
     linea3  db 'conforme avanzas en el juego...         '
@@ -68,6 +74,8 @@ INCLUDE macrosProyecto.lib
     regA4   db 35 DUP(?)
     regA5   db 35 DUP(?)
     regA6   db 35 DUP(?)    
+    posDatosJugador dw 0
+    posDatosPartida dw 0
     monito  db 10, 13, '                                                                         ',223,223,223,' '
             db 10, 13, '                                                                        ',219,219,' ',219,219
             db 10, 13, '                                                                             '
@@ -76,6 +84,43 @@ INCLUDE macrosProyecto.lib
             db 10, 13, '                                                                         ',223,223,223,' '
             db 0 ; Fin de cadena                           
     ; ================== MACROS ============================
+    REEMPLAZAR_CADENA_JUGADOR MACRO POSICION, CADENA
+        LOCAL CICLO_RCADENA
+        LOCAL FIN_RCADENA
+        MOV SI, POSICION
+        MOV DI, 0
+        CICLO_RCADENA:
+            CMP CADENA[DI], 0
+                JE FIN_RCADENA    
+            MOV AL, CADENA[DI]
+            MOV datosJugador[SI], AL 
+            INC SI
+            INC DI
+            JMP CICLO_RCADENA
+        FIN_RCADENA:
+            MOV datosJugador[SI], 031
+            INC SI
+            MOV POSICION, SI                         
+    REEMPLAZAR_CADENA_JUGADOR ENDM
+    
+    REEMPLAZAR_CADENA_PARTIDA MACRO POSICION, CADENA        
+        LOCAL CICLO_PCADENA
+        LOCAL FIN_PCADENA
+        MOV SI, POSICION
+        MOV DI, 0
+        CICLO_PCADENA:
+            CMP CADENA[DI], 0
+                JE FIN_PCADENA    
+            MOV AL, CADENA[DI]
+            MOV datosPartida[SI], AL 
+            INC SI
+            INC DI
+            JMP CICLO_PCADENA
+        FIN_PCADENA:
+            MOV datosPartida[SI], 031
+            INC SI
+            MOV POSICION, SI                         
+    REEMPLAZAR_CADENA_PARTIDA ENDM
     
 .CODE
     INICIO:
@@ -93,7 +138,7 @@ INCLUDE macrosProyecto.lib
     JMP FIN
                                              
     FIN:
-                       
+        CALL ARCHIVO_DATOS_PARTIDA                       
         MOV AX, 4C00H
         INT 21H
         
@@ -179,6 +224,9 @@ INCLUDE macrosProyecto.lib
     ENDP
     
     PANTALLA_JUEGO PROC                              
+        ; SE LEEN DATOS DEL JUGADOR DESDE EL ARCHIVO (EVIDENCIABLE SOBRE TODO EN NOMBRE DE JUGADOR)
+        CALL EXTRAER_DATOS_JUGADOR
+        
         ; Monito
         CALL LIMPIAR_REGS         
         IMP_COLOR_CURSOR 7, 0, monito, 475, 0BH      ; Monito
@@ -220,6 +268,8 @@ INCLUDE macrosProyecto.lib
         IMP_COLOR_CURSOR 2, 48, tHab, 11, colorNormal      ; Habitantes                     
         IMP_COLOR_CURSOR 2, 63, tAvan, 7, colorNormal      ; Avance
         
+        ; SE LEEN LOS DATOS DE PARTIDA DESDE EL ARCHIVO (SE APRECIA EN LOS RECURSOS)
+        CALL EXTRAER_DATOS_PARTIDA
         CALL ACT_RECURSOS   ;Actualizar recursos                                                          
         
         ; BIENVENIDA
@@ -263,16 +313,23 @@ INCLUDE macrosProyecto.lib
         
         MOV largoCad, 21
         IMP_CENTRAL msjNomb, msjEdad, msjNomJ, msjGen, msjRef
-        PEDIR_CADENA 7, 42, nombre, 30
-        PEDIR_CADENA 9, 42, edad, 2
-        PEDIR_CADENA 11, 42, nomJug, 15
-        PEDIR_CADENA 13, 42, genero, 1
-        PEDIR_CADENA 15, 42, nombRef, 20
+        IMP_COLOR_CURSOR 18, 7, msjMenuSalir, 58, colorNormal
+        CURSOR 18, 67, paginaAct
+        RASTREO_TECLA
+        CMP RASTREO,01H
+            JE FIN_ABS             
+        
+        INICIO_FORMULARIO:
+            PEDIR_CADENA 7, 42, nombre, 30 
+            PEDIR_CADENA 9, 42, edad, 2
+            PEDIR_CADENA 11, 42, nomJug, 15
+            PEDIR_CADENA 13, 42, genero, 1
+            PEDIR_CADENA 15, 42, nombRef, 20
         
         ; OPCIONES
-        IMP_COLOR_CURSOR 18, 10, msjImp, 48, colorNormal
+        IMP_COLOR_CURSOR 18, 7, msjImp, 58, colorNormal
         INICIO_OPCIONES_IMP:
-            CURSOR 18, 60, paginaAct
+            CURSOR 18, 67, paginaAct
             RASTREO_TECLA
             CMP RASTREO, 1Ch
                 JE FIN_IMP
@@ -284,11 +341,13 @@ INCLUDE macrosProyecto.lib
         IMPRIMIR_DATOS:    
             CALL IMPRIMIR_FORMULARIO
         FIN_IMP:
+            CALL ARCHIVO_DATOS_JUGADOR
+        FIN_ABS:    
         RET            
     ENDP
     
     IMPRIMIR_FORMULARIO PROC        
-        CALL LIMPIAR_REGS
+        CALL LIMPIAR_REGS            
         
         ; LIMPIAR IMPRESORA
         MOV AH, 5
@@ -368,6 +427,202 @@ INCLUDE macrosProyecto.lib
         MOV AL, paginaAct
         INT 10h
         RET
-    ENDP       
+    ENDP
+    
+    ARCHIVO_DATOS_JUGADOR PROC
+        REEMPLAZAR_CADENA_JUGADOR posDatosJugador, nombre
+        REEMPLAZAR_CADENA_JUGADOR posDatosJugador, edad
+        REEMPLAZAR_CADENA_JUGADOR posDatosJugador, nomJug
+        REEMPLAZAR_CADENA_JUGADOR posDatosJugador, genero
+        REEMPLAZAR_CADENA_JUGADOR posDatosJugador, nombRef
+        
+        ; 1. Crear la carpeta principal
+        CREAR_CARPETA rutaCarpeta
+        
+        ; 2. Crear archivo "DatosJugador.txt"
+        CREAR_ARCHIVO rutaDatosJugador, 32        
+        MOV idDatosJugador, AX ; Recuperar id
+        
+        ; 3. Abrir archivo
+        CALL LIMPIAR_REGS
+        ABRIR_ARCHIVO rutaDatosJugador, 2
+            MOV idDatosJugador, AX
+        CALL LIMPIAR_REGS
+        MOV CX, posDatosJugador
+        INC CX
+        
+        ; 4. Escribir en el archivo
+        ESCRIBIR_ARCHIVO idDatosJugador, CX, datosJugador
+        
+        RET
+    ENDP
+    
+    ARCHIVO_DATOS_PARTIDA PROC
+        CALL LIMPIAR_REGS
+        REEMPLAZAR_CADENA_PARTIDA posDatosPartida, rAgua
+        REEMPLAZAR_CADENA_PARTIDA posDatosPartida, rComida
+        REEMPLAZAR_CADENA_PARTIDA posDatosPartida, rEnerg
+        REEMPLAZAR_CADENA_PARTIDA posDatosPartida, rAvan
+        REEMPLAZAR_CADENA_PARTIDA posDatosPartida, rHab
+        REEMPLAZAR_CADENA_PARTIDA posDatosPartida, estado
+        
+        ; 1. Crear la carpeta principal
+        CREAR_CARPETA rutaCarpeta
+        
+        ; 2. Crear archivo "DatosPartida.txt"
+        CREAR_ARCHIVO rutaDatosPartida, 32        
+        MOV idDatosPartida, AX ; Recuperar id
+        
+        ; 3. Abrir archivo
+        CALL LIMPIAR_REGS
+        ABRIR_ARCHIVO rutaDatosPartida, 2
+            MOV idDatosPartida, AX
+        CALL LIMPIAR_REGS
+
+        ; 4. Escribir en el archivo
+        ESCRIBIR_ARCHIVO idDatosPartida, posDatosPartida, datosPartida
+        
+        RET
+    ENDP
+    
+    
+    EXTRAER_DATOS_JUGADOR PROC
+        ABRIR_ARCHIVO rutaDatosJugador, 2
+        MOV idDatosJugador, AX
+        
+        LEER_ARCHIVO idDatosJugador, 80, datosJugador
+
+        MOV SI, 0
+        MOV DI, 0
+        LLENAR_NOMBRE:
+            MOV AL, datosJugador[SI]
+            CMP AL, 031
+                JE LLENAR_EDAD                
+            MOV nombre[DI], AL
+            INC DI
+            INC SI
+            JMP LLENAR_NOMBRE
+        LLENAR_EDAD:                 
+            MOV DI, 0
+            INC SI
+            CICLO_EDAD:
+                MOV AL, datosJugador[SI]
+                CMP AL, 031
+                    JE LLENAR_NOMJ                
+                MOV edad[DI], AL
+                INC DI
+                INC SI
+                JMP CICLO_EDAD
+        LLENAR_NOMJ:                 
+            MOV DI, 0
+            INC SI
+            CICLO_NOMJ:
+                MOV AL, datosJugador[SI]
+                CMP AL, 031
+                    JE LLENAR_GENERO                
+                MOV nomJug[DI], AL
+                INC DI
+                INC SI
+                JMP CICLO_NOMJ
+        LLENAR_GENERO:                 
+            MOV DI, 0
+            INC SI
+            CICLO_GENERO:
+                MOV AL, datosJugador[SI]
+                CMP AL, 031
+                    JE LLENAR_NOMBREF                
+                MOV genero[DI], AL
+                INC DI
+                INC SI
+                JMP CICLO_GENERO
+        LLENAR_NOMBREF:                 
+            MOV DI, 0
+            INC SI
+            CICLO_NOMBREF:
+                MOV AL, datosJugador[SI]
+                CMP AL, 031
+                    JE FIN_LLENADO_JUGADOR                
+                MOV nombRef[DI], AL
+                INC DI
+                INC SI
+                JMP CICLO_NOMBREF                            
+        FIN_LLENADO_JUGADOR:    
+        RET
+    ENDP
+    
+    EXTRAER_DATOS_PARTIDA PROC
+        ABRIR_ARCHIVO rutaDatosPartida, 2
+        MOV idDatosPartida, AX
+        
+        LEER_ARCHIVO idDatosPartida, 80, datosPartida
+
+        MOV SI, 0
+        MOV DI, 0
+        LLENAR_AGUA:
+            MOV AL, datosPartida[SI]
+            CMP AL, 031
+                JE LLENAR_COMIDA                
+            MOV rAgua[DI], AL
+            INC DI
+            INC SI
+            JMP LLENAR_AGUA
+        LLENAR_COMIDA:                 
+            MOV DI, 0
+            INC SI
+            CICLO_COMIDA:
+                MOV AL, datosPartida[SI]
+                CMP AL, 031
+                    JE LLENAR_ENERGIA                
+                MOV rComida[DI], AL
+                INC DI
+                INC SI
+                JMP CICLO_COMIDA
+        LLENAR_ENERGIA:                 
+            MOV DI, 0
+            INC SI
+            CICLO_ENERGIA:
+                MOV AL, datosPartida[SI]
+                CMP AL, 031
+                    JE LLENAR_AVANCE                
+                MOV rEnerg[DI], AL
+                INC DI
+                INC SI
+                JMP CICLO_ENERGIA
+        LLENAR_AVANCE:                 
+            MOV DI, 0
+            INC SI
+            CICLO_AVANCE:
+                MOV AL, datosPartida[SI]
+                CMP AL, 031
+                    JE LLENAR_HAB                
+                MOV rAvan[DI], AL
+                INC DI
+                INC SI
+                JMP CICLO_AVANCE
+        LLENAR_HAB:                 
+            MOV DI, 0
+            INC SI
+            CICLO_HAB:
+                MOV AL, datosPartida[SI]
+                CMP AL, 031
+                    JE LLENAR_EDO                
+                MOV rHab[DI], AL
+                INC DI
+                INC SI
+                JMP CICLO_HAB
+        LLENAR_EDO:                 
+            MOV DI, 0
+            INC SI
+            CICLO_EDO:
+                MOV AL, datosPartida[SI]
+                CMP AL, 031
+                    JE FIN_LLENADO_PARTIDA                
+                MOV estado[DI], AL
+                INC DI
+                INC SI
+                JMP CICLO_EDO                                    
+        FIN_LLENADO_PARTIDA:    
+        RET
+    ENDP
            
 END

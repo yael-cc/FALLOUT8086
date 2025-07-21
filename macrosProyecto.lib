@@ -1,4 +1,17 @@
-   ;=======================MACROS========================    
+   ;=======================MACROS========================
+    CREAR_CARPETA MACRO ruta
+	MOV AH, 39H
+	LEA DX, ruta
+	INT 21H
+    CREAR_CARPETA ENDM
+
+    CREAR_ARCHIVO MACRO ruta, modo_archivo
+	MOV AH, 3CH
+	LEA DX, ruta
+	MOV CX, modo_archivo
+	INT 21H
+    CREAR_ARCHIVO ENDM
+         
     ESCRIBIR_ARCHIVO MACRO id, cuantos, buffer_hacia
     	MOV AH, 40H
     	MOV BX, id
@@ -145,6 +158,49 @@
             JMP INICIO_PCAD            
         FIN_PCAD:                                                         
     PEDIR_CADENA ENDM
+
+    PEDIR_CADENA_COND MACRO REN, COL, VARIABLE_CADENA, LONG, TECLA_RASTREO, NUM
+        LOCAL INICIO_PCAD
+        LOCAL FIN_PCAD
+        LOCAL BORRAR_CARACTER
+	LOCAL CONDICION
+        MOV SI, 0
+        MOV DH, REN
+        MOV DL, COL
+        INICIO_PCAD:
+            CMP SI, LONG
+               JE FIN_PCAD      
+            CURSOR DH, DL            
+            RASTREO_TECLA
+            MOV AH, rastreo
+            MOV AL, caracter
+	    CMP AH, TECLA_RASTREO
+		JE CONDICION
+            CMP AH, 0Eh
+                JE BORRAR_CARACTER
+            CMP AH, 1Ch
+                JE FIN_PCAD
+            CMP AL, 00H
+                JE INICIO_PCAD                 
+            MOV VARIABLE_CADENA[SI], AL
+            IMP_COLOR_CURSOR DH, DL, caracter, 1, colorNormal, paginaAct
+            INC DL    
+            INC SI            
+            JMP INICIO_PCAD
+	CONDICION:	
+            MOV num_condicion, NUM
+	    JMP TABLA_CONDICIONES
+        BORRAR_CARACTER:
+            CMP SI, 0
+                JE INICIO_PCAD
+            DEC SI
+            DEC DL
+            MOV simb, 0
+            IMP_COLOR_CURSOR DH, DL, simb, 1, colorNormal, paginaAct
+            JMP INICIO_PCAD            
+        FIN_PCAD:                                                         
+    PEDIR_CADENA_COND ENDM
+
     
     IMPRIMIR_VARIABLE MACRO VARIABLE_IMPRESION, LONG
         MOV CX, LONG
