@@ -30,6 +30,7 @@ INCLUDE macrosProyecto.lib
     msjGen  db ' Genero[M o F]:      '
     msjRef  db ' Nombre del refugio: '
     msjImp  db '     Presiona ENTER para continuar o E para imprimir.      '
+    msjDatosJug  db '   Rellena los datos del formulario segun se te indique.   '
     msjMenuSalir  db 'Presiona ESC para omitir o cualquier tecla para continuar.' 
     nombre  db 30 DUP(0)
     edad    db 3 DUP(0)
@@ -82,46 +83,7 @@ INCLUDE macrosProyecto.lib
             db 10, 13, '                                                                        ',219,223,223,223,219
             db 10, 13, '                                                                             '
             db 10, 13, '                                                                         ',223,223,223,' '
-            db 0 ; Fin de cadena                           
-    ; ================== MACROS ============================
-    REEMPLAZAR_CADENA_JUGADOR MACRO POSICION, CADENA
-        LOCAL CICLO_RCADENA
-        LOCAL FIN_RCADENA
-        MOV SI, POSICION
-        MOV DI, 0
-        CICLO_RCADENA:
-            CMP CADENA[DI], 0
-                JE FIN_RCADENA    
-            MOV AL, CADENA[DI]
-            MOV datosJugador[SI], AL 
-            INC SI
-            INC DI
-            JMP CICLO_RCADENA
-        FIN_RCADENA:
-            MOV datosJugador[SI], 031
-            INC SI
-            MOV POSICION, SI                         
-    REEMPLAZAR_CADENA_JUGADOR ENDM
-    
-    REEMPLAZAR_CADENA_PARTIDA MACRO POSICION, CADENA        
-        LOCAL CICLO_PCADENA
-        LOCAL FIN_PCADENA
-        MOV SI, POSICION
-        MOV DI, 0
-        CICLO_PCADENA:
-            CMP CADENA[DI], 0
-                JE FIN_PCADENA    
-            MOV AL, CADENA[DI]
-            MOV datosPartida[SI], AL 
-            INC SI
-            INC DI
-            JMP CICLO_PCADENA
-        FIN_PCADENA:
-            MOV datosPartida[SI], 031
-            INC SI
-            MOV POSICION, SI                         
-    REEMPLAZAR_CADENA_PARTIDA ENDM
-    
+            db 0 ; Fin de cadena                               
 .CODE
     INICIO:
         MOV AX, @DATA
@@ -318,7 +280,7 @@ INCLUDE macrosProyecto.lib
         RASTREO_TECLA
         CMP RASTREO,01H
             JE FIN_ABS             
-        
+        IMP_COLOR_CURSOR 18, 7, msjDatosJug, 58, colorNormal
         INICIO_FORMULARIO:
             PEDIR_CADENA 7, 42, nombre, 30 
             PEDIR_CADENA 9, 42, edad, 2

@@ -214,6 +214,43 @@
         LOOP IMPRIMIRV
     IMPRIMIR_VARIABLE ENDM
     
+    REEMPLAZAR_CADENA_JUGADOR MACRO POSICION, CADENA
+        LOCAL CICLO_RCADENA
+        LOCAL FIN_RCADENA
+        MOV SI, POSICION
+        MOV DI, 0
+        CICLO_RCADENA:
+            CMP CADENA[DI], 0
+                JE FIN_RCADENA    
+            MOV AL, CADENA[DI]
+            MOV datosJugador[SI], AL 
+            INC SI
+            INC DI
+            JMP CICLO_RCADENA
+        FIN_RCADENA:
+            MOV datosJugador[SI], 031
+            INC SI
+            MOV POSICION, SI                         
+    REEMPLAZAR_CADENA_JUGADOR ENDM
+    
+    REEMPLAZAR_CADENA_PARTIDA MACRO POSICION, CADENA        
+        LOCAL CICLO_PCADENA
+        LOCAL FIN_PCADENA
+        MOV SI, POSICION
+        MOV DI, 0
+        CICLO_PCADENA:
+            CMP CADENA[DI], 0
+                JE FIN_PCADENA    
+            MOV AL, CADENA[DI]
+            MOV datosPartida[SI], AL 
+            INC SI
+            INC DI
+            JMP CICLO_PCADENA
+        FIN_PCADENA:
+            MOV datosPartida[SI], 031
+            INC SI
+            MOV POSICION, SI                         
+    REEMPLAZAR_CADENA_PARTIDA ENDM
     
     
    ;=====================================================
