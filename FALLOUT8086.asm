@@ -13,6 +13,12 @@ INCLUDE macrosProyecto.lib
     rutaDatosPartida   db 'C:\FALLOUT8086\DatosPartida.txt',0   
     ren     db 0
     col     db 0
+    LARGO   db 0
+    RENTEMP  db 0
+    renMenu db 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219
+    msjIniciarPartida   db '    INICIAR    '
+    msjIniciarForm      db ' DATOS JUGADOR '
+    msjSalirJuego       db '     SALIR     '
     simb    db 0
     rastreo db 0
     num_condicion   db 0
@@ -77,6 +83,17 @@ INCLUDE macrosProyecto.lib
     regA6   db 35 DUP(?)    
     posDatosJugador dw 0
     posDatosPartida dw 0
+    monte   db 10,13,'            :::::.                                                             '           
+        db 10,13,'        -+*#########**+-                          .:::--::.                    '
+        db 10,13,'    -*#################**+=:.              :=++***##########*+=:               '
+        db 10,13,'    *###########################**********#####################*+=:            '
+        db 10,13,'   *###############################################################*+=:        '
+        db 10,13,'  ######################################################################*=:    '
+        db 10,13,' ########################################################################*=:   '
+        db 10,13,'###########################################################################=:  '
+        db 10,13,'#############################################################################::'
+        db 10,13,'###############################################################################'
+        db 10,13,'###############################################################################'
     monito  db 10, 13, '                                                                         ',223,223,223,' '
             db 10, 13, '                                                                        ',219,219,' ',219,219
             db 10, 13, '                                                                             '
@@ -91,15 +108,9 @@ INCLUDE macrosProyecto.lib
         MOV AX, @DATA
         MOV DS, AX 
         MOV ES, AX
-    ; Por defecto viene en pagina 0    
-    CALL PANTALLA_FORMULARIO
-    
-    ; Cambia a la pagina 1, a la pantalla principal del juego
-    MOV paginaAct, 1
-    CALL CAMBIAR_PAGINA
-    CALL PANTALLA_JUEGO                
-     
-    JMP FIN
+        MOV paginaAct, 0
+        CALL CAMBIAR_PAGINA
+        CALL PANTALLA_INICIO                
                                              
     FIN:
         CALL ARCHIVO_DATOS_PARTIDA                       
@@ -184,6 +195,234 @@ INCLUDE macrosProyecto.lib
         MOV DH, 24
         MOV DL, 79
         INT 10h
+        RET
+    ENDP
+    
+    LLAMAR_FORMULARIO PROC
+        ; Cambiamos a la pagina 1    
+        MOV paginaAct, 2
+        CALL CAMBIAR_PAGINA
+        CALL PANTALLA_FORMULARIO
+        RET
+    ENDP
+    
+    LLAMAR_PANTALLAJUEGO PROC
+        ; Cambia a la pagina 2, a la pantalla principal del juego
+        MOV paginaAct, 2
+        CALL CAMBIAR_PAGINA
+        CALL PANTALLA_JUEGO    
+        RET
+    ENDP    
+    
+    PANTALLA_INICIO PROC
+        IMP_COLOR_CURSOR 13, 0, monte, 890, 0AH  ; Imprime el pasto    
+        
+        ; Coloca parametros previo a poner arboles
+        MOV REN, 7
+        MOV COL, 10
+        MOV LARGO, 16        
+        ; Crea el primer arbol 
+        CALL ARBOL_COMPLETO
+        
+        ; Coloca parametros previo a poner arboles
+        MOV REN, 9
+        MOV COL, 19
+        MOV LARGO, 18        
+        ; Crea el segundo arbol 
+        CALL ARBOL_COMPLETO
+        
+        ; Coloca parametros previo a poner arboles
+        MOV REN, 8
+        MOV COL, 26
+        MOV LARGO, 19        
+        ; Crea el tercer arbol 
+        CALL ARBOL_COMPLETO 
+        
+        ; Coloca parametros previo a poner arboles
+        MOV REN, 10
+        MOV COL, 45
+        MOV LARGO, 18        
+        ; Crea el cuarto arbol 
+        CALL ARBOL_COMPLETO
+        
+        ; Coloca parametros previo a poner arboles
+        MOV REN, 9
+        MOV COL, 53
+        MOV LARGO, 17        
+        ; Crea el quinto arbol 
+        CALL ARBOL_COMPLETO
+        
+        ; Coloca parametros previo a poner arboles
+        MOV REN, 11
+        MOV COL, 64
+        MOV LARGO, 19        
+        ; Crea el sexto arbol 
+        CALL ARBOL_COMPLETO    
+        
+        ; Imprime el cuadro central
+        IMP_COLOR_CURSOR 14, 28, renMenu, 15, 09H
+        IMP_COLOR_CURSOR 15, 28, renMenu, 15, 09H
+        IMP_COLOR_CURSOR 16, 28, renMenu, 15, 09H
+        IMP_COLOR_CURSOR 17, 28, renMenu, 15, 09H
+        IMP_COLOR_CURSOR 18, 28, renMenu, 15, 09H
+        IMP_COLOR_CURSOR 19, 28, renMenu, 15, 09H
+        IMP_COLOR_CURSOR 20, 28, renMenu, 15, 09H
+        
+        ; Imprimir opciones
+        CALL IMPRIMIROPCIONES_INICIO
+        
+        MOV REN, 15
+        PEDIRTECLA_INICIO:
+            CALL IMPRIMIROPCIONES_INICIO                                        
+            CURSOR REN, 27            
+            MOV BL, REN
+            CMP BL, 15
+                JE SUBRAYADO1_INICIO
+            CMP BL, 17
+                JE SUBRAYADO2_INICIO
+            CMP BL, 19    
+                JE SUBRAYADO3_INICIO                        
+                
+            SUBRAYADO1_INICIO:
+                IMP_COLOR_CURSOR 15, 28, msjIniciarPartida, 15, 0F0H
+                JMP TECLEO_INICIO
+            SUBRAYADO2_INICIO:    
+                IMP_COLOR_CURSOR 17, 28, msjIniciarForm, 15, 0F0H
+                JMP TECLEO_INICIO
+            SUBRAYADO3_INICIO:    
+                IMP_COLOR_CURSOR 19, 28, msjSalirJuego, 15, 0F0H
+                JMP TECLEO_INICIO    
+                
+        TECLEO_INICIO:        
+            RASTREO_TECLA
+            MOV AH, RASTREO                        
+            CMP AH, 1CH
+                JE OPCION_INICIO
+            CMP AH, 48H
+                JE ARRIBA_INICIO
+            CMP AH, 50H
+                JE ABAJO_INICIO
+            JMP PEDIRTECLA_INICIO                        
+        
+        ABAJO_INICIO:
+            CMP REN, 19
+                JE PEDIRTECLA_INICIO            
+            INC REN
+            INC REN
+            JMP PEDIRTECLA_INICIO            
+        ARRIBA_INICIO:        
+            CMP REN, 15
+                JE PEDIRTECLA_INICIO            
+            DEC REN
+            DEC REN
+            JMP PEDIRTECLA_INICIO
+            
+        OPCION_INICIO:
+            MOV AL, REN
+            CMP AL, 15
+                JE JUEGO
+            CMP AL, 17
+                JE FORM
+            CMP AL, 19
+                JE FIN                    
+        JUEGO:
+            CALL LLAMAR_PANTALLAJUEGO        
+        FORM:
+            CALL LLAMAR_FORMULARIO              
+        RET
+    ENDP        
+    
+    
+    IMPRIMIROPCIONES_INICIO PROC
+        IMP_COLOR_CURSOR 15, 28, msjIniciarPartida, 15, 1EH
+        IMP_COLOR_CURSOR 17, 28, msjIniciarForm, 15, 1EH
+        IMP_COLOR_CURSOR 19, 28, msjSalirJuego, 15, 1EH
+        RET
+    ENDP    
+    
+    ARBOL_COMPLETO PROC
+        MOV AL, REN    
+        MOV RENTEMP, AL
+        CICLO_TRONCO:
+            CURSOR REN, COL
+            
+            MOV AH,9    ; CARACTER COLOR
+            MOV AL,219  ;CARACTER
+            MOV BL,08H    ;COLOR
+            MOV CX,1    ;VECES 
+            MOV BH,paginaAct
+            INT 10H
+            
+            INC REN            ; INCREMENTO EN 1  
+            MOV AL, LARGO 
+            CMP REN, AL         ; COMPARAR RENGLÓN
+                JLE CICLO_TRONCO
+                
+            DEC COL
+            MOV AL, RENTEMP
+            MOV LARGO, AL
+            MOV REN, AL
+            INC REN
+            SUB LARGO, 5
+           
+        CICLO_HOJAS1:
+            CURSOR REN, COL
+            
+            MOV AH,9    ; CARACTER COLOR
+            MOV AL,219  ;CARACTER
+            MOV BL,02H    ;COLOR
+            MOV CX,1    ;VECES 
+            MOV BH,paginaAct
+            INT 10H
+            
+            DEC REN            ; DECREMENTO EN 1  
+            MOV AL, LARGO 
+            CMP REN, AL         ; COMPARAR RENGLÓN
+                JGE CICLO_HOJAS1
+                
+            INC COL
+            MOV AL, RENTEMP
+            MOV LARGO, AL
+            MOV REN, AL
+            DEC REN
+            SUB LARGO, 5
+           
+        CICLO_HOJAS2:
+            CURSOR REN, COL
+            
+            MOV AH,9    ; CARACTER COLOR
+            MOV AL,219  ;CARACTER
+            MOV BL,02H    ;COLOR
+            MOV CX,1    ;VECES 
+            MOV BH,paginaAct
+            INT 10H
+            
+            DEC REN            ; DECREMENTO EN 1  
+            MOV AL, LARGO 
+            CMP REN, AL         ; COMPARAR RENGLÓN
+                JGE CICLO_HOJAS2                          
+            
+            INC COL
+            MOV AL, RENTEMP
+            MOV LARGO, AL
+            MOV REN, AL
+            INC REN
+            SUB LARGO, 5
+           
+        CICLO_HOJAS3:
+            CURSOR REN, COL
+            
+            MOV AH,9    ; CARACTER COLOR
+            MOV AL,219  ;CARACTER
+            MOV BL,02H    ;COLOR
+            MOV CX,1    ;VECES 
+            MOV BH,paginaAct
+            INT 10H
+            
+            DEC REN            ; DECREMENTO EN 1  
+            MOV AL, LARGO 
+            CMP REN, AL         ; COMPARAR RENGLÓN
+                JGE CICLO_HOJAS3                                        
         RET
     ENDP
     
@@ -306,7 +545,10 @@ INCLUDE macrosProyecto.lib
             CALL IMPRIMIR_FORMULARIO
         FIN_IMP:
             CALL ARCHIVO_DATOS_JUGADOR
-        FIN_ABS:    
+        FIN_ABS:
+            MOV paginaAct, 0
+            CALL CAMBIAR_PAGINA
+            CALL PANTALLA_INICIO    
         RET            
     ENDP
     
@@ -401,11 +643,11 @@ INCLUDE macrosProyecto.lib
         REEMPLAZAR_CADENA_JUGADOR posDatosJugador, nombRef
         
         ; 1. Crear la carpeta principal
-        CREAR_CARPETA rutaCarpeta
+        ;CREAR_CARPETA rutaCarpeta
         
         ; 2. Crear archivo "DatosJugador.txt"
-        CREAR_ARCHIVO rutaDatosJugador, 32        
-        MOV idDatosJugador, AX ; Recuperar id
+        ;CREAR_ARCHIVO rutaDatosJugador, 32        
+        ;MOV idDatosJugador, AX ; Recuperar id
         
         ; 3. Abrir archivo
         CALL LIMPIAR_REGS
@@ -434,11 +676,11 @@ INCLUDE macrosProyecto.lib
         REEMPLAZAR_CADENA_PARTIDA posDatosPartida, estado
         
         ; 1. Crear la carpeta principal
-        CREAR_CARPETA rutaCarpeta
+        ;CREAR_CARPETA rutaCarpeta
         
         ; 2. Crear archivo "DatosPartida.txt"
-        CREAR_ARCHIVO rutaDatosPartida, 32        
-        MOV idDatosPartida, AX ; Recuperar id
+        ;CREAR_ARCHIVO rutaDatosPartida, 32        
+        ;MOV idDatosPartida, AX ; Recuperar id
         
         ; 3. Abrir archivo
         CALL LIMPIAR_REGS
