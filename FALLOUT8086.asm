@@ -30,6 +30,7 @@ INCLUDE macrosProyecto.lib
     caracter   db 0    
     esqIzqS db 213
     esqDerS db 184
+    msjOpcionPrincipal  db 'Selecciona una opci',162,'n: '
     msjNomb db ' Nombre:             '
     msjEdad db ' Edad:               '
     msjNomJ db ' Nombre[juego]:      '
@@ -63,11 +64,16 @@ INCLUDE macrosProyecto.lib
     rHab    db '100',0    
     estado  db 'ESTABLE  ',0
     msgEdo  db 'ESTADO: '
-    linea1  db 'En este espacio se encuentra el texto de'
-    linea2  db 'la historia del juego que aparece       '
-    linea3  db 'conforme avanzas en el juego...         '
-    linea4  db 'Tendr',160,'s que tomar algunas decisiones que'
-    linea5  db 'van a afectar tu camino en la historia. '
+    linea1_CK1  db 'Oh, por fin despiertas jefe, el refugio '
+    linea2_CK1  db 'es un caos cuando no hay un lider. Desde'
+    linea3_CK1  db 'aquella guerra los recursos son muy va- '
+    linea4_CK1  db 'liosos. Desde el agua, energia, todo.   '
+    linea5_CK1  db 'Pero ya lo sabes, tu eres el lider aqu',161,'.'
+    linea1_CK2  db 'Parece que hay nueva gente que desea en-'
+    linea2_CK2  db 'trar al refugio. Toma una decisi',162,'n:     '
+    linea3_CK2  db 'A) Deja que entren al refugio.          '
+    linea4_CK2  db 'B) Echalos, no sabemos sus intenciones. '
+    linea5_CK2  db 'C) Quitales lo que tienen y echalos.    '    
     tReg    db ' REGISTRO DEL SISTEMA '
     reg1    db 16,'     [Primer registro vac',161,'o]      '
     reg2    db 16,'     [Segundo registro vac',161,'o]     '
@@ -75,6 +81,7 @@ INCLUDE macrosProyecto.lib
     reg4    db 16,'     [Cuarto registro vac',161,'o]      '
     reg5    db 16,'     [Quinto registro vac',161,'o]      '
     reg6    db 16,'     [Sexto registro vac',161,'o]       '
+    regCK2  db 16,'  Iniciaste tu historia, l',161,'der.   '
     regA1   db 35 DUP(?)
     regA2   db 35 DUP(?)
     regA3   db 35 DUP(?)
@@ -107,9 +114,7 @@ INCLUDE macrosProyecto.lib
     INICIO:
         MOV AX, @DATA
         MOV DS, AX 
-        MOV ES, AX
-        MOV paginaAct, 0
-        CALL CAMBIAR_PAGINA
+        MOV ES, AX        
         CALL PANTALLA_INICIO                
                                              
     FIN:
@@ -200,7 +205,7 @@ INCLUDE macrosProyecto.lib
     
     LLAMAR_FORMULARIO PROC
         ; Cambiamos a la pagina 1    
-        MOV paginaAct, 2
+        MOV paginaAct, 1
         CALL CAMBIAR_PAGINA
         CALL PANTALLA_FORMULARIO
         RET
@@ -215,6 +220,8 @@ INCLUDE macrosProyecto.lib
     ENDP    
     
     PANTALLA_INICIO PROC
+        MOV paginaAct, 0
+        CALL CAMBIAR_PAGINA
         IMP_COLOR_CURSOR 13, 0, monte, 890, 0AH  ; Imprime el pasto    
         
         ; Coloca parametros previo a poner arboles
@@ -483,17 +490,63 @@ INCLUDE macrosProyecto.lib
         IMP_COLOR_CURSOR 10, 3, msgEdo, 8, colorDestacado   ; Titulo Estado
         IMP_COLOR_CURSOR 12, 3, estado, 9, colorNormal      ; Estado actual                                           
         
-        ; Historia                                          
-        MOV largoCad, 40
-        IMP_CENTRAL linea1, linea2, linea3, linea4, linea5 
-        
-        ; Registros
-        CALL LIMPIAR_REGS        
-        IMP_COLOR_CURSOR 18, 28, tReg, 22, colorNormal   ; TITULO REGISTROS                                    
-        ESTABLECER_HISTORIAL_ACTUAL reg1, reg2, reg3, reg4, reg5, reg6
-        
+        CK1:        
+            ; Historia                                          
+            MOV largoCad, 40
+            IMP_CENTRAL linea1_CK1, linea2_CK1, linea3_CK1, linea4_CK1, linea5_CK1 
+            
+            ; Registros
+            CALL LIMPIAR_REGS        
+            IMP_COLOR_CURSOR 18, 28, tReg, 22, colorNormal   ; TITULO REGISTROS                                    
+            ESTABLECER_HISTORIAL_ACTUAL reg1, reg2, reg3, reg4, reg5, reg6
+            
+            ; PEDIR OPCION
+            ;msjOpcionPrincipal
+            IMP_COLOR_CURSOR 16, 28, msjOpcionPrincipal, 23, colorDestacado
+            CURSOR 16, 53
+            RASTREO_TECLA
+            RECORRER_HISTORIAL regCK2
+            MOV AH, RASTREO
+            MOV AL, CARACTER
+                        
+            CMP AH, 01H
+                JE VOLVER_INICIO
+            CMP AH, 1CH
+                JE CK2
+                
+            JMP CK1                
+            
+        CK2:                
+            ; Historia                                          
+            MOV largoCad, 40
+            IMP_CENTRAL linea1_CK2, linea2_CK2, linea3_CK2, linea4_CK2, linea5_CK2 
+
+            ; PEDIR OPCION
+            ;msjOpcionPrincipal
+            IMP_COLOR_CURSOR 16, 28, msjOpcionPrincipal, 23, colorDestacado
+            CURSOR 16, 53
+            RASTREO_TECLA
+            MOV AH, RASTREO
+            MOV AL, CARACTER
+                        
+            CMP AH, 01H
+                JE VOLVER_INICIO
+            CMP AL, 'A'
+                JE CK3
+                
+            JMP CK2
+            
+        CK3:    
+             
         RET
-    ENDP    
+    ENDP
+    
+    
+    VOLVER_INICIO:
+        MOV paginaAct, 0
+        CALL CAMBIAR_PAGINA
+        MOV REN, 15
+        JMP PEDIRTECLA_INICIO        
     
     PANTALLA_FORMULARIO PROC
         CALL LIMPIAR_PANTALLA
@@ -548,7 +601,7 @@ INCLUDE macrosProyecto.lib
         FIN_ABS:
             MOV paginaAct, 0
             CALL CAMBIAR_PAGINA
-            CALL PANTALLA_INICIO    
+            CALL LLAMAR_PANTALLAJUEGO   
         RET            
     ENDP
     
