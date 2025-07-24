@@ -599,9 +599,7 @@ INCLUDE macrosProyecto.lib
         FIN_IMP:
             CALL ARCHIVO_DATOS_JUGADOR
         FIN_ABS:
-            MOV paginaAct, 0
-            CALL CAMBIAR_PAGINA
-            CALL LLAMAR_PANTALLAJUEGO   
+            JMP VOLVER_INICIO   
         RET            
     ENDP
     
@@ -696,15 +694,19 @@ INCLUDE macrosProyecto.lib
         REEMPLAZAR_CADENA_JUGADOR posDatosJugador, nombRef
         
         ; 1. Crear la carpeta principal
-        ;CREAR_CARPETA rutaCarpeta
+        CREAR_CARPETA rutaCarpeta
+        JC C_ARC
         
+        C_ARC:
         ; 2. Crear archivo "DatosJugador.txt"
-        ;CREAR_ARCHIVO rutaDatosJugador, 32        
-        ;MOV idDatosJugador, AX ; Recuperar id
+        CREAR_ARCHIVO rutaDatosJugador, 32        
+        MOV idDatosJugador, AX ; Recuperar id
+        JC A_ARC
         
+        A_ARC:
         ; 3. Abrir archivo
         CALL LIMPIAR_REGS
-        ABRIR_ARCHIVO rutaDatosJugador, 2
+        ABRIR_ARCHIVO rutaDatosJugador, 2            
             MOV idDatosJugador, AX
         CALL LIMPIAR_REGS
         MOV CX, posDatosJugador
@@ -729,12 +731,16 @@ INCLUDE macrosProyecto.lib
         REEMPLAZAR_CADENA_PARTIDA posDatosPartida, estado
         
         ; 1. Crear la carpeta principal
-        ;CREAR_CARPETA rutaCarpeta
+        CREAR_CARPETA rutaCarpeta
+        JC C_ARC2
         
+        C_ARC2:
         ; 2. Crear archivo "DatosPartida.txt"
-        ;CREAR_ARCHIVO rutaDatosPartida, 32        
-        ;MOV idDatosPartida, AX ; Recuperar id
+        CREAR_ARCHIVO rutaDatosPartida, 32        
+        MOV idDatosPartida, AX ; Recuperar id
+        JC A_ARC2
         
+        A_ARC2:
         ; 3. Abrir archivo
         CALL LIMPIAR_REGS
         ABRIR_ARCHIVO rutaDatosPartida, 2
@@ -746,8 +752,7 @@ INCLUDE macrosProyecto.lib
         
         ; Mostrar en LCD (Los delimitadores entre cada datos no son visibles)
         IMPRIMIR_LCDDISPLAY datosPartida, posDatosPartida
-        CALL LIMPIAR_REGS
-        
+        CALL LIMPIAR_REGS        
         RET
     ENDP
     
