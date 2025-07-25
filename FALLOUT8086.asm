@@ -19,6 +19,7 @@ INCLUDE macrosProyecto.lib
     msjIniciarPartida   db '    INICIAR    '
     msjIniciarForm      db ' DATOS JUGADOR '
     msjSalirJuego       db '     SALIR     '
+    msjCK               db 'Guardado No. '
     simb    db 0
     rastreo db 0
     num_condicion   db 0
@@ -63,6 +64,7 @@ INCLUDE macrosProyecto.lib
     rAvan   db '  1%',0
     rHab    db '100',0    
     estado  db 'ESTABLE  ',0
+    checkpoint db '1', 0
     msgEdo  db 'ESTADO: '
     linea1_CK1  db 'Oh, por fin despiertas jefe, el refugio '
     linea2_CK1  db 'es un caos cuando no hay un lider. Desde'
@@ -87,7 +89,12 @@ INCLUDE macrosProyecto.lib
     regA3   db 35 DUP(?)
     regA4   db 35 DUP(?)
     regA5   db 35 DUP(?)
-    regA6   db 35 DUP(?)    
+    regA6   db 35 DUP(?)
+    segmentos   db 3Fh, 06h, 5Bh, 4Fh, 66h, 6Dh, 7Dh, 07h, 7Fh, 6Fh     
+    radiacion   db 0           
+    estNorm db 'ESTABLE  ',0   
+    estPel  db 'PELIGRO  ',0   
+    estMed  db 'INESTABLE',0      
     posDatosJugador dw 0
     posDatosPartida dw 0
     monte   db 10,13,'            :::::.                                                             '           
@@ -436,6 +443,7 @@ INCLUDE macrosProyecto.lib
     PANTALLA_JUEGO PROC                              
         ; SE LEEN DATOS DEL JUGADOR DESDE EL ARCHIVO (EVIDENCIABLE SOBRE TODO EN NOMBRE DE JUGADOR)
         CALL EXTRAER_DATOS_JUGADOR
+        CALL EXTRAER_DATOS_PARTIDA
         
         ; Monito
         CALL LIMPIAR_REGS         
@@ -478,8 +486,7 @@ INCLUDE macrosProyecto.lib
         IMP_COLOR_CURSOR 2, 48, tHab, 11, colorNormal      ; Habitantes                     
         IMP_COLOR_CURSOR 2, 63, tAvan, 7, colorNormal      ; Avance
         
-        ; SE LEEN LOS DATOS DE PARTIDA DESDE EL ARCHIVO (SE APRECIA EN LOS RECURSOS)
-        CALL EXTRAER_DATOS_PARTIDA
+        ; SE LEEN LOS DATOS DE PARTIDA DESDE EL ARCHIVO (SE APRECIA EN LOS RECURSOS)        
         CALL ACT_RECURSOS   ;Actualizar recursos                                                          
         
         ; BIENVENIDA
@@ -490,7 +497,7 @@ INCLUDE macrosProyecto.lib
         IMP_COLOR_CURSOR 10, 3, msgEdo, 8, colorDestacado   ; Titulo Estado
         IMP_COLOR_CURSOR 12, 3, estado, 9, colorNormal      ; Estado actual                                           
         
-        CK1:        
+        CK1:                    
             ; Historia                                          
             MOV largoCad, 40
             IMP_CENTRAL linea1_CK1, linea2_CK1, linea3_CK1, linea4_CK1, linea5_CK1 
@@ -499,6 +506,10 @@ INCLUDE macrosProyecto.lib
             CALL LIMPIAR_REGS        
             IMP_COLOR_CURSOR 18, 28, tReg, 22, colorNormal   ; TITULO REGISTROS                                    
             ESTABLECER_HISTORIAL_ACTUAL reg1, reg2, reg3, reg4, reg5, reg6
+            
+            ; Checkpoint
+            IMP_COLOR_CURSOR 5, 62, msjCK, 13, colorDestacado
+            IMP_COLOR_CURSOR 5, 75, checkpoint, 2, colorDestacado
             
             ; PEDIR OPCION
             ;msjOpcionPrincipal
@@ -516,11 +527,16 @@ INCLUDE macrosProyecto.lib
                 
             JMP CK1                
             
-        CK2:                
+        CK2:
+            MOV checkpoint, '2'                
             ; Historia                                          
             MOV largoCad, 40
             IMP_CENTRAL linea1_CK2, linea2_CK2, linea3_CK2, linea4_CK2, linea5_CK2 
-
+            
+            ; Checkpoint
+            IMP_COLOR_CURSOR 5, 62, msjCK, 13, colorDestacado
+            IMP_COLOR_CURSOR 5, 75, checkpoint, 2, colorDestacado
+            
             ; PEDIR OPCION
             ;msjOpcionPrincipal
             IMP_COLOR_CURSOR 16, 28, msjOpcionPrincipal, 23, colorDestacado
@@ -709,12 +725,11 @@ INCLUDE macrosProyecto.lib
         ABRIR_ARCHIVO rutaDatosJugador, 2            
             MOV idDatosJugador, AX
         CALL LIMPIAR_REGS
-        MOV CX, posDatosJugador
-        INC CX
         
         ; 4. Escribir en el archivo
-        ESCRIBIR_ARCHIVO idDatosJugador, CX, datosJugador
+        ESCRIBIR_ARCHIVO idDatosJugador, posDatosJugador, datosJugador
         
+        CERRRAR_ARCHIVO idDatosJugador
         ; Mostrar en LCD (Los delimitadores entre cada datos no son visibles)
         IMPRIMIR_LCDDISPLAY datosJugador, posDatosJugador
         CALL LIMPIAR_REGS
@@ -729,6 +744,7 @@ INCLUDE macrosProyecto.lib
         REEMPLAZAR_CADENA_PARTIDA posDatosPartida, rAvan
         REEMPLAZAR_CADENA_PARTIDA posDatosPartida, rHab
         REEMPLAZAR_CADENA_PARTIDA posDatosPartida, estado
+        REEMPLAZAR_CADENA_PARTIDA posDatosPartida, checkpoint
         
         ; 1. Crear la carpeta principal
         CREAR_CARPETA rutaCarpeta
@@ -750,6 +766,7 @@ INCLUDE macrosProyecto.lib
         ; 4. Escribir en el archivo
         ESCRIBIR_ARCHIVO idDatosPartida, posDatosPartida, datosPartida
         
+        CERRRAR_ARCHIVO idDatosPartida
         ; Mostrar en LCD (Los delimitadores entre cada datos no son visibles)
         IMPRIMIR_LCDDISPLAY datosPartida, posDatosPartida
         CALL LIMPIAR_REGS        
@@ -817,7 +834,8 @@ INCLUDE macrosProyecto.lib
                 INC DI
                 INC SI
                 JMP CICLO_NOMBREF                            
-        FIN_LLENADO_JUGADOR:    
+        FIN_LLENADO_JUGADOR: 
+            CERRRAR_ARCHIVO idDatosJugador   
         RET
     ENDP
     
@@ -887,12 +905,116 @@ INCLUDE macrosProyecto.lib
             CICLO_EDO:
                 MOV AL, datosPartida[SI]
                 CMP AL, 031
-                    JE FIN_LLENADO_PARTIDA                
+                    JE LLENAR_CHK                
                 MOV estado[DI], AL
                 INC DI
                 INC SI
-                JMP CICLO_EDO                                    
-        FIN_LLENADO_PARTIDA:    
+                JMP CICLO_EDO
+        LLENAR_CHK:                 
+            MOV DI, 0
+            INC SI
+            CICLO_CHK:
+                MOV AL, datosPartida[SI]
+                CMP AL, 031
+                    JE FIN_LLENADO_PARTIDA                
+                MOV checkpoint[DI], AL
+                INC DI
+                INC SI
+                JMP CICLO_CHK                                            
+        FIN_LLENADO_PARTIDA:
+            CERRRAR_ARCHIVO idDatosPartida    
+        RET
+    ENDP
+    
+    SALIDA_HAB_ENR PROC    ; Da salida en el BCD de 7 segmentos a Habitantes y Energia
+        CALL VACIAR_DISPLAYSEG
+        MOV SI, 0
+        MOV DX, 2030H
+        CICLOHAB_SEG:
+            MOV AL, rHab[SI]
+            CMP AL, 30H
+            JB FINHAB_SEG
+            CMP AL, 39H
+            JA FINHAB_SEG
+            SUB AL, 30H
+            MOV BL, AL
+            MOV AL, segmentos[BX]
+            OUT DX, AL
+            INC SI
+            INC DX
+            JMP CICLOHAB_SEG
+        FINHAB_SEG:
+            CALL ENR_DISPLAYSEG
+        RET
+    ENDP
+    
+    ENR_DISPLAYSEG PROC
+        MOV SI, 0
+        MOV DX, 2034H
+        CICLOENR_SEG:
+            MOV AL, rEnerg[SI]
+            CMP AL, 30H
+            JB FINENR_SEG
+            CMP AL, 39H
+            JA FINENR_SEG
+            SUB AL, 30H
+            MOV BL, AL
+            MOV AL, segmentos[BX]
+            OUT DX, AL
+            INC SI
+            INC DX
+            JMP CICLOENR_SEG
+        FINENR_SEG:
+        RET
+    ENDP
+    
+    VACIAR_DISPLAYSEG PROC    
+        MOV DX, 2030H
+        MOV SI, 0
+        CICLO_VSEG:
+            CMP SI, 8
+                JE FIN_VSEG
+            MOV AL, 0
+            OUT DX, AL
+            INC DX
+            INC SI
+            JMP CICLO_VSEG
+        FIN_VSEG:
+        RET
+    ENDP
+    
+    AUMENTAR_RADIACION PROC   ; Enciende el calefactor del termetro (con el que simulamos radiación
+        MOV DX, 127
+        MOV AL, 1
+        OUT DX, AL
+        RET
+    ENDP
+    
+    DETENER_RADIACION PROC    ; Apaga calefactor, simula frenar radiación
+        MOV DX, 127
+        MOV AL, 0
+        OUT DX, AL
+        
+        MOV DX, 125
+        IN AL, DX
+        MOV radiacion, AL
+        RET
+    ENDP
+    
+    ANALIZAR_RADIACION PROC     ; Analiza la temperatura que queda al apagar (radiación registrada)
+        MOV AL, radiacion
+        CMP AL, 20 
+            JBE RAD_EST
+        CMP AL, 100
+            JAE RAD_PELIGRO     
+        JMP RAD_MED                  
+        RAD_EST:
+            REEMPLAZAR_CADENA estado, estNorm    
+        RAD_MED:
+            REEMPLAZAR_CADENA estado, estPel
+        RAD_PELIGRO:        
+            REEMPLAZAR_CADENA estado, estMed
+        FIN_ANRAD:        
         RET
     ENDP
            
