@@ -64,16 +64,264 @@ INCLUDE macrosProyecto.lib
     rHab    db '100',0    
     estado  db 'ESTABLE  ',0
     msgEdo  db 'ESTADO: '
-    linea1_CK1  db 'Oh, por fin despiertas jefe, el refugio '
-    linea2_CK1  db 'es un caos cuando no hay un lider. Desde'
+    linea1_CK1  db 'Oh, por fin despiertas jefe, el refugio ' ;40
+    linea2_CK1  db 'es un caos cuando no hay un l',161,'der. Desde'
     linea3_CK1  db 'aquella guerra los recursos son muy va- '
-    linea4_CK1  db 'liosos. Desde el agua, energia, todo.   '
-    linea5_CK1  db 'Pero ya lo sabes, tu eres el lider aqu',161,'.'
-    linea1_CK2  db 'Parece que hay nueva gente que desea en-'
+    linea4_CK1  db 'liosos. Desde el agua, energ',161,'a, todo.   '
+    linea5_CK1  db 'Pero ya lo sabes, tu eres el l',161,'der aqu',161,'.'
+    linea1_CK2  db 'Parece que hay nueva gente que desea en-'         ;1
     linea2_CK2  db 'trar al refugio. Toma una decisi',162,'n:     '
     linea3_CK2  db 'A) Deja que entren al refugio.          '
     linea4_CK2  db 'B) Echalos, no sabemos sus intenciones. '
-    linea5_CK2  db 'C) Quitales lo que tienen y echalos.    '    
+    linea5_CK2  db 'C) Quitales lo que tienen y ',130,'chalos.    ' 
+    ;---------------------INICIO CAMBIOS DE PAU-------------------------------    
+    ;HISTORIA CK3 A-------------------------------------------
+    linea1_CK3_A  db 'Son una familia conformada por un padre,' ;40 OOOOOOOO
+    linea2_CK3_A  db 'madre y un ni',164,'o, despu',130,'s entran al refu-';34
+    linea3_CK3_A  db 'gio, sus niveles de radiaci',162,'son normales'
+    linea4_CK3_A  db 'y lo primero que hacen es comer y beber.' 
+    linea5_CK3_A  db 'Dejarlos fuera no era una opci',149,'n.'                                                           
+    ;HISTORIA CK3 B--------------------------------------------
+    linea1_CK3_B  db 'No tengo tiempo ni recursos para aceptar'
+    linea2_CK3_B  db 'm',160,'s gente, no podemos aceptar a          '
+    linea3_CK3_B  db 'cualquiera solo porque nos sentimos mal,'
+    linea4_CK3_B  db 'aqu,',161,' es la supervivencia del mas apto.  '
+    linea5_CK3_B  db 'Lamento decir esto, pero deben irse.    '  
+    ;HISTORIA CK3 C--------------------------------------------
+    linea1_CK3_C  db 'Si creen que unos d',130,'biles cualquiera    '
+    linea2_CK3_C  db 'pueden entrar al refugio est',133,'equivocados'
+    linea3_CK3_C  db 'Les perdonar',130,' la vida... Por un precio. '
+    linea4_CK3_C  db 'Qu',161,'tenles sus proviciones, pueden ser   '
+    linea5_CK3_C  db 'de utilidad para nosotros.                    '
+    ;HISTORIA CK4 PREAMBULO-----------------------------------------------
+    linea1_CK4  db 'Wow, ya tomaste tu primera decisi',162,'n, veo'
+    linea2_CK4  db 'que ya despertaste bien, recuerda que el'
+    linea3_CK4  db 'd',161,'a apenas empieza, tenemos que seguir  '
+    linea4_CK4  db 'con la gesti',162,'n del refugio, como lo es  '
+    linea5_CK4  db 'la falta de personal de vigilancia.     ';40 
+    ;HISTORIAS CK 4 DECISION 2--------------------------------------
+     linea1_CK4DEC  db 'Nos estamos quedando sin gente y eso    '
+     linea2_CK4DEC  db 'aumenta el peligro. Toma una decisi',162,'n.  '
+     linea3_CK4DEC  db 'A)Dejar a la Guardia como est',160,'.         '
+     linea4_CK4DEC  db 'B)Anunciar reclutamientos voluntarios.  '
+     linea5_CK4DEC  db 'C)Realizar un reclutamiento forzado.    '
+    ;HISTORIAS CK 4 A--------------------------------------       ;SE SALTO ESTA PARTE
+    linea1_CK4_A  db 'No es necesario reclutar, la Guardia es '
+    linea2_CK4_A  db 'fuerte y no se va a derribar debido a la'
+    linea3_CK4_A  db 'disminuci',162,'n de unos pocos n',163,'meros.      '
+    linea4_CK4_A  db 'Conf',161,'a en mi, si realente hubiera       '
+    linea5_CK4_A  db 'un gran peligro, lo dar',161,' a todo.        ' ;40  
+    ;HISTORIAS CK 4 B-------------------------------------- 
+    linea1_CK4_B  db 'Tal vez si es mejor aumentar la Guardia ';40
+    linea2_CK4_B  db 'para prevenir que casos pequeños puedan '
+    linea3_CK4_B  db 'subir en peligro. Pero no quiero forzar '
+    linea4_CK4_B  db 'a todos, es un trabajo dif',161,'cil, solo    ' ;*****
+    linea5_CK4_B  db 'informemos que aceptamos voluntarios.   ' ;40
+    ;HISTORIAS CK 4 C--------------------------------------      
+    linea1_CK4_C  db 'La Guardia es la protecci',162,'n del refugio '
+    linea2_CK4_C  db 'y la gente debe de empezar a apoyar.    '
+    linea3_CK4_C  db 'Informa que cada familia debe enlistar a'
+    linea4_CK4_C  db 'su primog',130,'nito, hombre o mujer, si se   '
+    linea5_CK4_C  db 'reH',163,'san, amen',160,'zalos con sacarlos.       ';40  
+    ;HISTORIA CK5 PREAMBULO-----------------------------------------------
+    linea1_CK5  db 'Tus deseos son ',162,'rdenes jefe, en usted   '
+    linea2_CK5  db 'confiamos, probablemente ya se cans',162,'    '
+    linea3_CK5  db 'sin embargo le dimos el puesto de jefe  '
+    linea4_CK5  db 'por sus capacidades y ganas de ayudar a '
+    linea5_CK5  db 'los diferentes sobrevivientes.          ';40 
+    ;HISTORIAS CK 5 DECISION 3--------------------------------------
+     linea1_CK5DEC  db 'Nos estamos quedando sin medicamentos...'
+     linea2_CK5DEC  db 'Una mujer dice ser herborista,ayudar',160,'   '
+     linea3_CK5DEC  db 'a cambio de comida extra.               '
+     linea4_CK5DEC  db 'A)Aceptar la oferta.                    '
+     linea5_CK5DEC  db 'B)Declinar la oferta                    ';40 
+     ;HISTORIAS CK 5 A--------------------------------------      ;;SE SALTO ESTA PARTE Y LA CUARTA DECISION
+    linea1_CK5_A  db 'La salud del refugio es primordial, si  '
+    linea2_CK5_A  db 'comprobamos que ella puede ayudarnos, el'
+    linea3_CK5_A  db 'peso de buscar nuevos medicamentos ser',160,' '
+    linea4_CK5_A  db 'menor, acepto, pero hay que asegurarnos '
+    linea5_CK5_A  db 'de que no es una charlatana, dile eso.  ' ;40  
+    ;HISTORIAS CK 5 B-------------------------------------- 
+    linea1_CK5_B  db 'Unas hierbitas no nos ayudar',160,'n.         ';40
+    linea2_CK5_B  db 'Dile a la charlatana esa que estafadores'
+    linea3_CK5_B  db 'no son bienvenidos en nuestro refugio.  '
+    linea4_CK5_B  db 'Si cree que puede engañarnos se equivoca'
+    linea5_CK5_B  db 'S',160,'quenla, eso gana por mentir.          ' ;40
+    
+    ;HISTORIAS CK 5 DECISION 4--------------------------------------
+     linea1_CK6DEC  db 'Ya es de noche... Lleg',162,' el momento de   '
+     linea2_CK6DEC  db 'patrullar.',168,'Qu',130,' har',160,'esta noche jefe',63,'.     '
+     linea3_CK6DEC  db 'A)Hacer guardia sin relevo            '
+     linea4_CK6DEC  db 'B)Turnarte con los guardias           '
+     linea5_CK6DEC  db 'C)Irte a dormir, que otro haga guardia';40 
+     ;HISTORIAS CK 5 A-------------------------------------- 
+    linea1_CK6_A  db 'Yo ya he descansado bastante esta tarde,'
+    linea2_CK6_A  db 'estoy seguro que varios muchachos se tu-'
+    linea3_CK6_A  db 'rnaron para llenar mi lugar. No se preo-'
+    linea4_CK6_A  db 'cupen, pueden dejarme este sector para  '
+    linea5_CK6_A  db 'patrullar yo solo, ustedes descansen.   ' ;40  
+    ;HISTORIAS CK 5 B-------------------------------------- 
+    linea1_CK6_B  db 'Me gusta mucho convivir con la Guardia y';40
+    linea2_CK6_B  db 'a pesar de que soy el jefe no dejo de   '
+    linea3_CK6_B  db 'ser un soldado. Esta noche voy a vigilar'
+    linea4_CK6_B  db 'con el equipo de este sector, estaremos '
+    linea5_CK6_B  db 'rotando para que descansemos todos.     ' ;40
+    ;HISTORIAS CK 5 C--------------------------------------      
+    linea1_CK6_C  db 'Soy el jefe y como uno debo de tener un '
+    linea2_CK6_C  db 'poco de privilegios extra. Todas estas  '
+    linea3_CK6_C  db 'decisiones me tienen cansado, la Guardia'
+    linea4_CK6_C  db 'puede arreglarse sola, yo quiero volver '
+    linea5_CK6_C  db 'a mi cama y darme una buena siesta.     ';40
+    
+    ;HISTORIAS DIA 2 ------------EL TEMA ES DEL MEDIO AMBIENTE 
+    ;HISTORIA DIA 2 PREAMBULO-----------------------------------------------
+    linea1_CK77  db 'Con un nuevo amanecer viene una nueva   '
+    linea2_CK77  db 'oportunidad de hacer las cosas bien, lo '
+    linea3_CK77  db 'mejor es dar una vuelta por el refugio, '
+    linea4_CK77  db 'muy probablemente alguien me necesita   '
+    linea5_CK77  db 'para tomar una decisi',162,'n importante.     ';40 
+    ;HISTORIAS CK 4 DECISION 1--------------------------------------
+     linea1_CK7DEC  db 'Jefe, es bueno  verle, en la exploraci',162,'n'
+     linea2_CK7DEC  db 'de hoy ecnontramos un vivero, parece no '
+     linea3_CK7DEC  db 'ser afectado por la contaminaci',162,'n.      '
+     linea4_CK7DEC  db 'A)Explorar el vivero para recursos      '
+     linea5_CK7DEC  db 'B)Dejar el vivero abandonado a su suerte';40
+    ;HISTORIAS CK 4 A-------------------------------------- 
+    linea1_CK7_A  db 'Si comprobamos que el vivero est',160,' libre '
+    linea2_CK7_A  db 'de radiaci',162,'n puede convertirse en una  '
+    linea3_CK7_A  db 'nueva fuente de comida segura, hecho de '
+    linea4_CK7_A  db 'menos las frutas y verduras frescas, la '
+    linea5_CK7_A  db 'naturaleza no est',160,' perdida del todo.    ' ;40  
+    ;HISTORIAS CK 4 B-------------------------------------- 
+    linea1_CK7_B  db 'S',162,'lo los tontos pueden creer que  un vi-';40
+    linea2_CK7_B  db 'vero en buen estado es un milagro, cuan-'
+    linea3_CK7_B  db 'do claramente es una trampa de otrs gru-'
+    linea4_CK7_B  db 'pos, la naturaleza est',160,' perdida del todo'
+    linea5_CK7_B  db 'no podemos salvarla ya.                 ' ;40   
+    
+    ;HISTORIAS CK 4 DECISION 2--------------------------------------
+     linea1_CK8DEC  db 'Nuestro equipo de investigadores recre',162,' '
+     linea2_CK8DEC  db 'una fuente de nueva energ',161,'a limpia.     '
+     linea3_CK8DEC  db 'A)Postura a favor                         '
+     linea4_CK8DEC  db 'B)Postura en contra                       '
+     linea5_CK8DEC  db 'C)Postura Neutral                         ';40
+    ;HISTORIAS CK 4 A-------------------------------------- 
+    linea1_CK8_A  db 'Conseguir crear y recrear fuentes de en-'
+    linea2_CK8_A  db 'erg',161,'a limpia ayuda al refugio y ayuda a '
+    linea3_CK8_A  db 'que desastres como el que pasamos no vu-'
+    linea4_CK8_A  db 'elvan a sucedes, dile al equipo que tie-'
+    linea5_CK8_A  db 'ne todo mi apoyo con el proyecto.       ' ;40  
+    ;HISTORIAS CK 4 B-------------------------------------- 
+    linea1_CK8_B  db 'La energ',161,'a nunca ser',160,' como antes, pens-';40
+    linea2_CK8_B  db ,160,'bamos que era, nuestro mundo ya no pued'
+    linea3_CK8_B  db 'de ser salvado y debemos vivir con los '
+    linea4_CK8_B  db 'pedazos que nos quedan. Paren ese tonto '
+    linea5_CK8_B  db 'proyecto, solo gastan recursos.         ' ;40
+    ;HISTORIAS CK 4 C--------------------------------------      
+    linea1_CK8_C  db 'Quiero creer que esa es una buena notic-'
+    linea2_CK8_C  db 'ia, sin embargo no soy el m',160,'s capacitado'
+    linea3_CK8_C  db 'para dictarlo, puede que el proyecto sea'
+    linea4_CK8_C  db 'una buena idea, tendremos que dejarlo a '
+    linea5_CK8_C  db 'la votaci',162,'n de todos en el refugio.     ';40 
+    
+    ;HISTORIAS CK 4 DECISION 3--------------------------------------
+     linea1_CK9DEC  db 'Por primera vez se cre',162,' una manera de   '
+     linea2_CK9DEC  db 'descontaminar la tierra, se han hecho v-'
+     linea3_CK9DEC  db 'arias pruebas pero hace falta hacer m',160,'s.'
+     linea4_CK9DEC  db 'A)Apoyar el plan del laboratorio.         '
+     linea5_CK9DEC  db 'B)No apoyar el pln del laboratorio.       ';40
+    ;HISTORIAS CK 4 A-------------------------------------- 
+    linea1_CK9_A  db 'De esa forma podemos empezar a limpiar  '
+    linea2_CK9_A  db 'los alrededores del refugio, salir del  '
+    linea3_CK9_A  db 'refugio subterr',160,'neo y volver poco a poco'
+    linea4_CK9_A  db 'a la normalidad, ahora siendo mucho m',160,'s '
+    linea5_CK9_A  db 'cuidadosos con el medio ambiente.       ' ;40  
+    ;HISTORIAS CK 4 B-------------------------------------- 
+    linea1_CK9_B  db 'De nuevo investigaciones que lo ',163,'nico q-';40
+    linea2_CK9_B  db 'ue hacen es gastar nuestros pocos recur-'
+    linea3_CK9_B  db 'sos en ideas irreales, nunca saldremos  '
+    linea4_CK9_B  db 'del subterraneo, nuestra vida es bajo t-'
+    linea5_CK9_B  db 'ierra abandonen la esperanza de una vez.' ;40 
+    
+    ;HISTORIAS CIERRE DEL DIA-------------------------------------- 
+    linea1_CK9_N  db 'Ya lleg',162,' el d',161,'a a su fin, estoy  muy ca-';40
+    linea2_CK9_N  db 'sado, mis decisiones han cambiado el cu-'
+    linea3_CK9_N  db 'rso del refugio y estoy orgulloso de mis'
+    linea4_CK9_N  db 'de ello, hoy har',130,' turno con los otros   ' 
+    linea5_CK9_N  db 'guardias para patrullar el refugio.     ' ;40
+
+     ;HISTORIAS DIA 3  -------------------TEMA MANEJO DE RECURSOS----------------
+    ;HISTORIA DIA 3 PREAMBULO-----------------------------------------------
+    linea1_CK10 db 'La guardia de ayer fue pesada pero me ha'
+    linea2_CK10 db 'dado una nueva visi',162,'n de la situaci',162,'n en'
+    linea3_CK10 db 'la que se encuentra el refugio, rot',130,' con'
+    linea4_CK10 db 'guardias de otros sectores y me han hab-'
+    linea5_CK10 db 'lado de la falta de alimento que hay.   ';40 
+    ;HISTORIAS CK 4 DECISION 1--------------------------------------
+     linea1_CK10DEC  db 'He escuchado a otros organizarse para   '
+     linea2_CK10DEC  db 'hoy realizar un robo a los viveres.     '
+     linea3_CK10DEC  db 'A)Hacer de la vista gorda.              '
+     linea4_CK10DEC  db 'B)Impedir el robo.                      '
+     linea5_CK10DEC  db 'C)Unirse al robo de los guardias.       ';40
+    ;HISTORIAS CK 4 A-------------------------------------- 
+    linea1_CK10_A  db 'Ellos sn mis hermanos de guardia, para  '
+    linea2_CK10_A  db 'algunos ser',160,' ego',161,'sta pero creo que ellos'
+    linea3_CK10_A  db 'merecen esa comida extra,no puedo ni qu-'
+    linea4_CK10_A  db 'ero neg',160,'rselas. Creo que lo mejor ser',160,'  '
+    linea5_CK10_A  db 'hacer como que ayer no escuch',130,' nada.    ' ;40  
+    ;HISTORIAS CK 4 B-------------------------------------- 
+    linea1_CK10_B  db 'Aunque la Guardia realiza una tarea muy ';40
+    linea2_CK10_B  db 'importante todos los ciudadanos del ref-'
+    linea3_CK10_B  db 'ugio tienen el mismo valor, no podemos  '
+    linea4_CK10_B  db 'dar preferencias en estos tiempos, tengo'
+    linea5_CK10_B  db 'que impedir ese robo a toda costa.      ' ;40
+    ;HISTORIAS CK 4 C--------------------------------------      
+    linea1_CK10_C  db 'Estoy de acuerdo con los guardias: quie-'
+    linea2_CK10_C  db 'nes estamos en puestos de autoridad mer-'
+    linea3_CK10_C  db 'ecemos m',160,'s que los dem',160,'s del refugio, no'
+    linea4_CK10_C  db 'quiero limitar mis raciones, ayudar',130,' a  '
+    linea5_CK10_C  db 'los guardias con el robo a los viveres. ';40  
+    
+    ;HISTORIAS CK 4 DECISION 2--------------------------------------
+     linea1_CK11DEC  db 'El ultimo jefe de misi',162,'n es corrupto con'
+     linea2_CK11DEC  db 'los recursos, me ruega no quitarle el p-'
+     linea3_CK11DEC  db 'uesto a cambio de un soborno.           '
+     linea4_CK11DEC  db 'A)Aceptar los recursos no declarados.   '
+     linea5_CK11DEC  db 'B)Exponerlo ante el refugio.            ';40
+    ;HISTORIAS CK 4 A-------------------------------------- 
+    linea1_CK11_A  db 'No estar',161,'a mal tener m',160,'s agua y comida  '
+    linea2_CK11_A  db 'en un lugar solo para m',161,', a cambio de s-'
+    linea3_CK11_A  db 'eguir tray',130,'ndome recursos a escondidas, '
+    linea4_CK11_A  db 'dejo que el oficial corrupto conserve su'
+    linea5_CK11_A  db 'puesto, espero no ser descubierto.      ' ;40  
+    ;HISTORIAS CK 4 B-------------------------------------- 
+    linea1_CK11_B  db 'Esconder recursos del exterior que son  ';40
+    linea2_CK11_B  db 'primordiales para el dato es un crimen  '
+    linea3_CK11_B  db 'que no tiene perd',162,'n, su soborno me indi-'
+    linea4_CK11_B  db 'gna, lo mejor es exponerlo y que el ref-'
+    linea5_CK11_B  db 'ugio decida su destino: la expulsi',162,'n.   ' ;40
+    
+    ;HISTORIAS CK 4 DECISION 3--------------------------------------
+     linea1_CK12DEC  db 'Debido a a la falta de cuidado hubo una '
+     linea2_CK12DEC  db 'fuga en la reserva de agua, el refugio  '
+     linea3_CK12DEC  db 'pide un castigo para el encargado.      '
+     linea4_CK12DEC  db 'A)Castigar al encargado de la reserva.  '
+     linea5_CK12DEC  db 'B)Perdonar al encargado de la reserva.  ';40
+    ;HISTORIAS CK 4 A-------------------------------------- 
+    linea1_CK12_A  db 'Un recurso tan escaso el agua tiene que '
+    linea2_CK12_A  db 'ser cuidado como el oro, no podemos dej-'
+    linea3_CK12_A  db 'ar este crimen impune, si bien no merece'
+    linea4_CK12_A  db 'el exilio si una sanci',162,'n alta, deber',160,' r-'
+    linea5_CK12_A  db 'enunciar a su mitad de raci',162,'n de agua.  ' ;40  
+    ;HISTORIAS CK 4 B-------------------------------------- 
+    linea1_CK12_B  db 'Fue un pequeño error, no merece ser cas-';40
+    linea2_CK12_B  db 'tigado por tan leve descuido, no debemos'
+    linea3_CK12_B  db 'dejar atr',160,'s nuestra humanindad, ser',160,' pe-'
+    linea4_CK12_B  db 'rdonado, pero no podr',160,' volver a ejercer '
+    linea5_CK12_B  db 'ning',163,'n puesto importante en el refugio. ' ;40
+   ;-----------------------FIN  DE CAMBIOS DE PAU -----------------------------------------
+     
+     
     tReg    db ' REGISTRO DEL SISTEMA '
     reg1    db 16,'     [Primer registro vac',161,'o]      '
     reg2    db 16,'     [Segundo registro vac',161,'o]     '
@@ -354,8 +602,8 @@ INCLUDE macrosProyecto.lib
             CURSOR REN, COL
             
             MOV AH,9    ; CARACTER COLOR
-            MOV AL,219  ;CARACTER
-            MOV BL,08H    ;COLOR
+            MOV AL,219  ;CARACTER  //
+            MOV BL,8    ;COLOR   //
             MOV CX,1    ;VECES 
             MOV BH,paginaAct
             INT 10H
@@ -376,8 +624,8 @@ INCLUDE macrosProyecto.lib
             CURSOR REN, COL
             
             MOV AH,9    ; CARACTER COLOR
-            MOV AL,219  ;CARACTER
-            MOV BL,02H    ;COLOR
+            MOV AL,5  ;CARACTER   //
+            MOV BL,2AH    ;COLOR    //
             MOV CX,1    ;VECES 
             MOV BH,paginaAct
             INT 10H
@@ -398,8 +646,8 @@ INCLUDE macrosProyecto.lib
             CURSOR REN, COL
             
             MOV AH,9    ; CARACTER COLOR
-            MOV AL,219  ;CARACTER
-            MOV BL,02H    ;COLOR
+            MOV AL,5  ;CARACTER   //
+            MOV BL,2AH    ;COLOR    //
             MOV CX,1    ;VECES 
             MOV BH,paginaAct
             INT 10H
@@ -420,8 +668,8 @@ INCLUDE macrosProyecto.lib
             CURSOR REN, COL
             
             MOV AH,9    ; CARACTER COLOR
-            MOV AL,219  ;CARACTER
-            MOV BL,02H    ;COLOR
+            MOV AL,5  ;CARACTER     ///
+            MOV BL,2AH    ;COLOR      //
             MOV CX,1    ;VECES 
             MOV BH,paginaAct
             INT 10H
@@ -490,6 +738,7 @@ INCLUDE macrosProyecto.lib
         IMP_COLOR_CURSOR 10, 3, msgEdo, 8, colorDestacado   ; Titulo Estado
         IMP_COLOR_CURSOR 12, 3, estado, 9, colorNormal      ; Estado actual                                           
         
+        ;------------------------EMPIEZAN CAMBIOS DE PAU----------------------------
         CK1:        
             ; Historia                                          
             MOV largoCad, 40
@@ -516,8 +765,8 @@ INCLUDE macrosProyecto.lib
                 
             JMP CK1                
             
-        CK2:                
-            ; Historia                                          
+        CK2: ;-----------------------OPCIONES DE YAEL, DEJAR ENTRAR A LA GENTE ----------------               
+            ; Historia DECISION                                         
             MOV largoCad, 40
             IMP_CENTRAL linea1_CK2, linea2_CK2, linea3_CK2, linea4_CK2, linea5_CK2 
 
@@ -528,16 +777,619 @@ INCLUDE macrosProyecto.lib
             RASTREO_TECLA
             MOV AH, RASTREO
             MOV AL, CARACTER
-                        
+                 ;Primeras 4 opciones, LLEVAN A DONDE MISMO PERO LOS DIALOGOS SON DIFERENTES       
             CMP AH, 01H
                 JE VOLVER_INICIO
             CMP AL, 'A'
                 JE CK3
-                
+            CMP AL, 'B'
+                JE CK4
+            CMP AL, 'C'
+                JE CK5    
             JMP CK2
-            
-        CK3:    
+          
+          ;PRIMERA DECISION  
+        CK3:  ; Historia                                          
+            MOV largoCad, 40
+            IMP_CENTRAL linea1_CK3_A, linea2_CK3_A, linea3_CK3_A, linea4_CK3_A, linea5_CK3_A 
+            CURSOR 16, 53
+            RASTREO_TECLA   ;SUMA 3 A HABITANTES, RESTA 15  AGUA Y COMIDA 
+            MOV AH, RASTREO
+            MOV AL, CARACTER
+         
+            ;CMP AH, 01H
+            ;    JE VOLVER_INICIO
+            CMP AH, 1CH
+                JE D1P2
              
+        
+        CK4:  ; Historia
+             MOV largoCad, 40
+            IMP_CENTRAL linea1_CK3_B, linea2_CK3_B, linea3_CK3_B, linea4_CK3_B,linea5_CK3_B  
+            CURSOR 16, 53
+            RASTREO_TECLA  ;RESTA 2 A HABITANTES 
+            MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D1P2 
+          
+        
+        CK5:; Historia  
+            MOV largoCad, 40
+            IMP_CENTRAL linea1_CK3_C, linea2_CK3_C, linea3_CK3_C, linea4_CK3_C, linea5_CK3_C  
+            CURSOR 16, 53
+            RASTREO_TECLA 
+            ;RESTA 3 A HABITANTES 
+            MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D1P2
+            ;DIA1PREAMBULO2
+            
+        D1P2:   ;DIA UNO PREAMBULO 2
+         ; Historia   PREAMBULO                                         
+            MOV largoCad, 40
+            IMP_CENTRAL linea1_CK4, linea2_CK4, linea3_CK4, linea4_CK4, linea5_CK4 
+            
+             ; PEDIR OPCION
+            IMP_COLOR_CURSOR 16, 28, msjOpcionPrincipal, 23, colorDestacado
+            CURSOR 16, 53
+            RASTREO_TECLA
+            MOV AH, RASTREO
+            MOV AL, CARACTER
+                        
+            CMP AH, 01H
+                JE VOLVER_INICIO
+            CMP AH, 1CH
+                JE D1D2  ;DIA1DECISION2
+                
+            JMP D1D2     
+    
+    D1D2: ;HISTORIA DECISION  DIA1 DECISION 2  
+    ;-------------------------AUMENTAR LA GUARDIA---------------------
+              MOV largoCad, 40
+            IMP_CENTRAL linea1_CK4DEC, linea2_CK4DEC, linea3_CK4DEC, linea4_CK4DEC, linea5_CK4DEC
+            ; PEDIR OPCION                                                        
+            
+            IMP_COLOR_CURSOR 16, 28, msjOpcionPrincipal, 23, colorDestacado
+            CURSOR 16, 53
+            RASTREO_TECLA
+            MOV AH, RASTREO
+            MOV AL, CARACTER
+                 ;Primeras 4 opciones, LLEVAN A DONDE MISMO PERO LOS DIALOGOS SON DIFERENTES       
+            CMP AH, 01H
+                JE VOLVER_INICIO
+            CMP AL, 'A'
+                JE D2CK3
+            CMP AL, 'B'
+                JE D2CK4
+            CMP AL, 'C'
+                JE D2CK5    
+            JMP D2CK3  
+         ;HISTORIA DECISION  
+         
+         D2CK3: ;HISTORIA DECISION A  ---------- DJARLA ASI
+            MOV largoCad, 40
+            IMP_CENTRAL linea1_CK4_A, linea2_CK4_A, linea3_CK4_A, linea4_CK4_A, linea5_CK4_A  
+            CURSOR 16, 53
+            RASTREO_TECLA
+                        MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D1P3 
+                JMP D1P3 
+            ;SE QUEDA IGUAL
+            
+         D2CK4: ;HISTORIA DECISION B -------------- RECLUTAMIENTO VOLUNTARIO   
+            MOV largoCad, 40
+            IMP_CENTRAL linea1_CK4_B, linea2_CK4_B, linea3_CK4_B, linea4_CK4_B, linea5_CK4_B 
+            CURSOR 16, 53
+            RASTREO_TECLA 
+                        MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D1P3 
+                JMP D1P3 
+            ;SE QUEDA IGUAL
+         
+         D2CK5:    
+                ;HISTORIA DECISION C ----------------- RECLUTAMIENTO FORZOSO -----------
+            MOV largoCad, 40
+            IMP_CENTRAL linea1_CK4_C, linea2_CK4_C, linea3_CK4_C, linea4_CK4_C, linea5_CK4_C 
+             CURSOR 16, 53
+            RASTREO_TECLA
+                        MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D1P3 
+            ;RESTA 5 A HABITANTES
+            JMP D1P3 
+         
+         D1P3:
+            ; Historia   PREAMBULO                                         
+            MOV largoCad, 40
+            IMP_CENTRAL linea1_CK5, linea2_CK5, linea3_CK5, linea4_CK5, linea5_CK5 
+            
+             ; PEDIR OPCION
+            IMP_COLOR_CURSOR 16, 28, msjOpcionPrincipal, 23, colorDestacado
+            CURSOR 16, 53
+            RASTREO_TECLA
+            MOV AH, RASTREO
+            MOV AL, CARACTER
+                        
+            CMP AH, 01H
+                JE VOLVER_INICIO
+            CMP AH, 1CH
+                JE D1D3  ;DIA1DECISION3
+                
+            JMP D1D3 
+            
+            D1D3:    ;DIA UNO DECISION 3 --------------- LA HERBORISTA --------------------------
+                MOV largoCad, 40
+                IMP_CENTRAL linea1_CK5DEC, linea2_CK5DEC, linea3_CK5DEC, linea4_CK5DEC, linea5_CK5DEC
+                ; PEDIR OPCION                                                        
+                
+                IMP_COLOR_CURSOR 16, 28, msjOpcionPrincipal, 23, colorDestacado
+                CURSOR 16, 53
+                RASTREO_TECLA
+                MOV AH, RASTREO
+                MOV AL, CARACTER
+                     ;Primeras 4 opciones, LLEVAN A DONDE MISMO PERO LOS DIALOGOS SON DIFERENTES       
+                CMP AH, 01H
+                    JE VOLVER_INICIO
+                CMP AL, 'A'
+                    JE D1CKA
+                CMP AL, 'B'
+                    JE D1CKB   
+                JMP D1CKA 
+             
+             D1CKA: ;HISTORIA DECISION A ---------------- ACEPTAR TRATO
+                MOV largoCad, 40
+                IMP_CENTRAL linea1_CK5_A, linea2_CK5_A, linea3_CK5_A, linea4_CK5_A, linea5_CK5_A 
+                CURSOR 16, 53
+                RASTREO_TECLA 
+                            MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D1D4 
+                ; RESTA 10 A COMIDA
+                JMP D1D4
+             
+             D1CKB:;HISTORIA DECISION B ----------------- NO ACEPTAR
+                 MOV largoCad, 40
+                IMP_CENTRAL linea1_CK5_B, linea2_CK5_B, linea3_CK5_B, linea4_CK5_B, linea5_CK5_B 
+                CURSOR 16, 53
+                RASTREO_TECLA 
+                            MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D1D4
+                 JMP D1D4 ;RESTA 5 A HABITANTES
+                 
+                 ;---------------------DECISION 4 DEL DIA 1 -------------------------------------
+                 
+                 
+             D1D4:    ;DIA UNO DECISION 3 --------------- PATRULLAR --------------------------
+                MOV largoCad, 40
+                IMP_CENTRAL linea1_CK6DEC, linea2_CK6DEC, linea3_CK6DEC, linea4_CK6DEC, linea5_CK6DEC
+                ; PEDIR OPCION                                                        
+                
+                IMP_COLOR_CURSOR 16, 28, msjOpcionPrincipal, 23, colorDestacado
+                CURSOR 16, 53
+                RASTREO_TECLA
+                MOV AH, RASTREO
+                MOV AL, CARACTER
+                     ;Primeras 4 opciones, LLEVAN A DONDE MISMO PERO LOS DIALOGOS SON DIFERENTES       
+                CMP AH, 01H
+                    JE VOLVER_INICIO
+                CMP AL, 'A'
+                    JE CK6A
+                CMP AL, 'B'
+                    JE CK6B
+               CMP AL, 'C'
+                    JE CK6C    
+                JMP D1CKA 
+             
+             CK6A: ;HISTORIA DECISION A  ----------------- IR SOLO
+                MOV largoCad, 40
+                IMP_CENTRAL linea1_CK6_A, linea2_CK6_A, linea3_CK6_A, linea4_CK6_A, linea5_CK6_A 
+                CURSOR 16, 53
+                RASTREO_TECLA 
+                            MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D2P1 
+                ;SUMA 5 A COMIDA Y AGUA
+                JMP D2P1 ;DIA2 PREAMBULO 1
+             
+             CK6B:;HISTORIA DECISION B  -------------------- TURNOS
+                 MOV largoCad, 40
+                IMP_CENTRAL linea1_CK6_B, linea2_CK6_B, linea3_CK6_B, linea4_CK6_B, linea5_CK6_B 
+                CURSOR 16, 53
+                RASTREO_TECLA 
+                            MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D2P1
+                 JMP D2P1 ;DEJALO IGUAL 
+                 
+                 
+           CK6C:;HISTORIA DECISION B  ------------------- DUERMETE
+                 MOV largoCad, 40
+                IMP_CENTRAL linea1_CK6_C, linea2_CK6_C, linea3_CK6_C, linea4_CK6_C, linea5_CK6_C 
+                CURSOR 16, 53
+                RASTREO_TECLA 
+                            MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D2P1
+                 JMP D2P1 ;RESTALE 10 A AGUA Y COMIDA
+                 
+
+                ;----------------------------------FIN CHECKPOINT 1-----------------
+                ;----------------------------------INICIO CHECKPOINT 2--------------------            
+           D2P1:
+               ; Historia DIA2  PREAMBULO 1                                        
+            MOV largoCad, 40
+            IMP_CENTRAL linea1_CK77, linea2_CK77, linea3_CK77, linea4_CK77, linea5_CK77 
+            
+             ; PEDIR OPCION
+            IMP_COLOR_CURSOR 16, 28, msjOpcionPrincipal, 23, colorDestacado
+            CURSOR 16, 53
+            RASTREO_TECLA
+            RECORRER_HISTORIAL regCK2
+            MOV AH, RASTREO
+            MOV AL, CARACTER
+                        
+            CMP AH, 01H
+                JE VOLVER_INICIO
+            CMP AH, 1CH
+                JE D2D1  ;DIA2DECISION1
+                
+            JMP D2D1
+            
+            D2D1: ;HISTORIA DIA 2 DECISION 1------------------ VIVERO
+                MOV largoCad, 40
+                IMP_CENTRAL linea1_CK7DEC, linea2_CK7DEC, linea3_CK7DEC, linea4_CK7DEC, linea5_CK7DEC
+                ; PEDIR OPCION                                                        
+                
+                IMP_COLOR_CURSOR 16, 28, msjOpcionPrincipal, 23, colorDestacado
+                CURSOR 16, 53
+                RASTREO_TECLA
+                MOV AH, RASTREO
+                MOV AL, CARACTER
+                     
+                CMP AH, 01H
+                    JE VOLVER_INICIO
+                CMP AL, 'A'
+                    JE D2CK7A
+                CMP AL, 'B'
+                    JE D2CK7B 
+                JMP D1CKA 
+              
+              D2CK7A: ;HISTORIA DECISION A   -------------- EXPLORAR VIVERO
+                MOV largoCad, 40
+                IMP_CENTRAL linea1_CK7_A, linea2_CK7_A, linea3_CK7_A, linea4_CK7_A, linea5_CK7_A  
+                CURSOR 16, 53
+                RASTREO_TECLA 
+                            MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D2DEC2
+                ;SUMA 20 COMIDA Y RESTA 5 A AGUA
+                JMP D2DEC2 ;DIA2 DECISION 2 (NO HAY PREAMBULO)
+              
+              D2CK7B:;HISTORIA DECISION B ------------------------------ ALV VIVERO
+                MOV largoCad, 40
+                IMP_CENTRAL linea1_CK7_B, linea2_CK7_B, linea3_CK7_B, linea4_CK7_B, linea5_CK7_B 
+                CURSOR 16, 53
+                RASTREO_TECLA 
+                            MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D2DEC2
+                ;RESTA 1 HABITANTES
+                JMP D2DEC2 ;DIA2 DECISION 2 (NO HAY PREAMBULO) 
+                
+                   
+                ;HSITORIA ------------------------- ENERGIA LIMPIA-----------
+           D2DEC2: ;DIA 2, DECISION 2, NO PREAMBULO PORQUE SON MUCHAS LINEAS YA OYE
+                    MOV largoCad, 40
+                    IMP_CENTRAL linea1_CK8DEC, linea2_CK8DEC, linea3_CK8DEC, linea4_CK8DEC, linea5_CK8DEC
+                    ; PEDIR OPCION                                                        
+                    
+                    IMP_COLOR_CURSOR 16, 28, msjOpcionPrincipal, 23, colorDestacado
+                    CURSOR 16, 53
+                    RASTREO_TECLA
+                    MOV AH, RASTREO
+                    MOV AL, CARACTER
+                                
+                    CMP AH, 01H
+                        JE VOLVER_INICIO
+                    CMP AL, 'A'
+                        JE D2CK8A
+                    CMP AL, 'B'
+                        JE D2CK8B 
+                    CMP AL, 'C'
+                        JE D2CK8C 
+                    JMP D1CKA 
+                  
+                  D2CK8A: ;HISTORIA DECISION A---------- A FAVOR
+                    MOV largoCad, 40
+                    IMP_CENTRAL linea1_CK8_A, linea2_CK8_A, linea3_CK8_A, linea4_CK8_A, linea5_CK8_A 
+                     CURSOR 16, 53
+                     RASTREO_TECLA 
+             MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D2DEC3
+                    ;SUMA 3 A GUA Y COMIDA
+                    JMP D2DEC3 ;DIA2 DECISION 3 (NO HAY PREAMBULO)
+                  
+                  D2CK8B:;HISTORIA DECISION B  --------------- EN CONTRA
+                    MOV largoCad, 40
+                    IMP_CENTRAL linea1_CK8_B, linea2_CK8_B, linea3_CK8_B, linea4_CK8_B, linea5_CK8_B 
+                     CURSOR 16, 53
+                     RASTREO_TECLA 
+                                 MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D2DEC3
+                    ;RESTA 5 A AGUA Y COMIDA
+                    JMP D2DEC3 ;DIA2 DECISION 3 (NO HAY PREAMBULO)
+                    
+                  D2CK8C:;HISTORIA DECISION C ----------------- NEUTRAL
+                    MOV largoCad, 40
+                    IMP_CENTRAL linea1_CK8_C, linea2_CK8_C, linea3_CK8_C, linea4_CK8_C, linea5_CK8_C 
+                     CURSOR 16, 53
+                     RASTREO_TECLA
+                                 MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D2DEC3 
+                    ;NADA
+                    JMP D2DEC3 ;DIA2 DECISION 3 (NO HAY PREAMBULO)  
+                                                                     
+                                                                     
+           ;------------------- METODO PARA DESCONTAMINAR----------------------        
+            D2DEC3:  ;DIA2 DECISION3 LE QUITE 1 PORQUE 4 YA ERA MUCHO OYE
+                MOV largoCad, 40
+                IMP_CENTRAL linea1_CK9DEC, linea2_CK9DEC, linea3_CK9DEC, linea4_CK9DEC, linea5_CK9DEC
+                ; PEDIR OPCION                                                        
+                
+                IMP_COLOR_CURSOR 16, 28, msjOpcionPrincipal, 23, colorDestacado
+                CURSOR 16, 53
+                RASTREO_TECLA
+                MOV AH, RASTREO
+                MOV AL, CARACTER
+                     ;Primeras 4 opciones, LLEVAN A DONDE MISMO PERO LOS DIALOGOS SON DIFERENTES       
+                CMP AH, 01H
+                    JE VOLVER_INICIO
+                CMP AL, 'A'
+                    JE D2CK9A
+                CMP AL, 'B'
+                    JE D2CK9B 
+                JMP D2CK9A ;SUPONGO QUE AQUI IRA EL BAD ENDING POR RADIACION 
+              
+              D2CK9A: ;HISTORIA DECISION A ------------- APOYAR
+                MOV largoCad, 40
+                IMP_CENTRAL linea1_CK9_A, linea2_CK9_A, linea3_CK9_A, linea4_CK9_A, linea5_CK9_A
+                     CURSOR 16, 53
+                     RASTREO_TECLA
+                                 MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D2CIDI  
+                ;SUMA 5 A AGUA Y COMIDA
+                JMP D2CIDI 
+              
+              D2CK9B:;HISTORIA DECISION B  ----------------- NO APOYAR
+                MOV largoCad, 40
+                IMP_CENTRAL linea1_CK9_B, linea2_CK9_B, linea3_CK9_B, linea4_CK9_B, linea5_CK9_B
+                     CURSOR 16, 53
+                     RASTREO_TECLA
+                                 MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D2CIDI  
+                ;RESTA 5 A AGUA Y COMIDA
+                JMP D2CIDI ;DIA2 CIERRE DEL DIA (PA QUE VEAN QUE YA SE ACABO)
+                
+         D2CIDI:
+            ; Historia DIA2  PREAMBULO 1                                        
+            MOV largoCad, 40
+            IMP_CENTRAL linea1_CK9_N, linea2_CK9_N, linea3_CK9_N, linea4_CK9_N, linea5_CK9_N 
+            
+             ; PEDIR OPCION
+            IMP_COLOR_CURSOR 16, 28, msjOpcionPrincipal, 23, colorDestacado
+            CURSOR 16, 53
+            RASTREO_TECLA
+            MOV AH, RASTREO
+            MOV AL, CARACTER
+                        
+            CMP AH, 1CH
+                JE D2P1
+            JMP D2P1  
+             
+             ;--------------------------------------- FIN DEL CHECKPOINT 2--------------------------
+             ;---------------------------------------INICIO DEL CHECKPOINT 3--------------------------
+             D2P1:
+               ; Historia DIA3  PREAMBULO 1                                        
+            MOV largoCad, 40
+            IMP_CENTRAL linea1_CK10, linea2_CK10, linea3_CK10, linea4_CK10, linea5_CK10 
+            
+             ; PEDIR OPCION
+            IMP_COLOR_CURSOR 16, 28, msjOpcionPrincipal, 23, colorDestacado
+            CURSOR 16, 53
+            RASTREO_TECLA
+            RECORRER_HISTORIAL regCK2
+            MOV AH, RASTREO
+            MOV AL, CARACTER
+                        
+            CMP AH, 01H
+                JE VOLVER_INICIO
+            CMP AH, 1CH
+                JE D2D1  ;DIA2DECISION1
+                
+            JMP D3D1
+             
+             ;-------------DECISION DEL DIA 3--------------------------------------------
+             ;---------------------- ROBAR VIVERES
+            D3D1: ;HISTORIA DIA 3 DECISION 1
+                MOV largoCad, 40
+                IMP_CENTRAL linea1_CK10DEC, linea1_CK10DEC, linea1_CK10DEC, linea1_CK10DEC, linea1_CK10DEC
+                ; PEDIR OPCION                                                        
+                
+                IMP_COLOR_CURSOR 16, 28, msjOpcionPrincipal, 23, colorDestacado
+                CURSOR 16, 53
+                RASTREO_TECLA
+                MOV AH, RASTREO
+                MOV AL, CARACTER
+                     ;Primeras 4 opciones, LLEVAN A DONDE MISMO PERO LOS DIALOGOS SON DIFERENTES       
+                CMP AH, 01H
+                    JE VOLVER_INICIO
+                CMP AL, 'A'
+                    JE CK10A
+                CMP AL, 'B'
+                    JE CK10B 
+                CMP AL, 'C'
+                    JE CK10C 
+                JMP CK10A 
+              
+              CK10A: ;HISTORIA DECISION A --------------------- VISTA GORDA
+                MOV largoCad, 40
+                IMP_CENTRAL linea1_CK10_A, linea2_CK10_A, linea3_CK10_A, linea4_CK10_A, linea5_CK10_A  
+                CURSOR 16, 53
+                RASTREO_TECLA 
+                            MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D3D2
+                ;RESTA 30 A AGUA Y COMIDA
+                JMP D3D2 
+              
+              CK10B:;HISTORIA DECISION B  --------------------- IMPEDIR ROBO
+                MOV largoCad, 40
+                IMP_CENTRAL linea1_CK10_B, linea3_CK10_B, linea3_CK10_B, linea4_CK10_B, linea5_CK10_B 
+                CURSOR 16, 53
+                RASTREO_TECLA 
+                            MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D3D2
+                ;NADA
+                JMP D3D2 
+                
+                
+              CK10C:;HISTORIA DECISION B ---------------------------- UNIRSE
+                MOV largoCad, 40
+                IMP_CENTRAL linea1_CK10_C, linea2_CK10_C, linea3_CK10_C, linea4_CK10_C, linea5_CK10_C 
+                CURSOR 16, 53
+                RASTREO_TECLA 
+                            MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D3D2
+                ;RESTA 50 A AGUA Y COMIDA
+                JMP D3D2    
+            
+            D3D2: ;------------------------------------DIA 3 DECISION 2-------------------  
+            ;------------------------------ JEFE CORRUPTO--------
+                MOV largoCad, 40
+                IMP_CENTRAL linea1_CK11DEC, linea2_CK11DEC, linea3_CK11DEC, linea4_CK11DEC, linea5_CK11DEC
+                ; PEDIR OPCION                                                        
+                
+                IMP_COLOR_CURSOR 16, 28, msjOpcionPrincipal, 23, colorDestacado
+                CURSOR 16, 53
+                RASTREO_TECLA
+                MOV AH, RASTREO
+                MOV AL, CARACTER
+                            
+                CMP AH, 01H
+                    JE VOLVER_INICIO
+                CMP AL, 'A'
+                    JE CK11A
+                CMP AL, 'B'
+                    JE CK11B 
+ 
+                JMP CK11A 
+              
+              CK11A: ;HISTORIA DECISION A ----------------ACEPTAR SOBORNO
+                MOV largoCad, 40
+                IMP_CENTRAL linea1_CK11_A, linea2_CK11_A, linea3_CK11_A, linea4_CK11_A, linea5_CK11_A  
+                CURSOR 16, 53
+                RASTREO_TECLA 
+                            MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D3D3
+                ;RESTA 10 A AGUA Y COMIDA
+                JMP D3D3 
+              
+              CK11B:;HISTORIA DECISION B ------------------- EXPONERLO
+                MOV largoCad, 40
+                IMP_CENTRAL linea1_CK11_B, linea2_CK11_B, linea3_CK11_B, linea4_CK11_B, linea5_CK11_B 
+                CURSOR 16, 53
+                RASTREO_TECLA 
+                            MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE D3D3
+                ;RESTA 1 A HABITANTES
+                JMP D3D3 
+            
+            ;-----------------------DIA 3 DECISION3 FUGA DE AGUA-------------------    
+            D3D3:;--------------------------------
+                       
+                MOV largoCad, 40
+                IMP_CENTRAL linea1_CK12DEC, linea2_CK12DEC, linea3_CK12DEC, linea4_CK12DEC, linea5_CK12DEC
+                ; PEDIR OPCION                                                        
+                
+                IMP_COLOR_CURSOR 16, 28, msjOpcionPrincipal, 23, colorDestacado
+                CURSOR 16, 53
+                RASTREO_TECLA
+                MOV AH, RASTREO
+                MOV AL, CARACTER
+                            
+                CMP AH, 01H
+                    JE VOLVER_INICIO
+                CMP AL, 'A'
+                    JE CK12A
+                CMP AL, 'B'
+                    JE CK12B 
+ 
+                JMP CK12A 
+              
+              CK12A: ;HISTORIA DECISION A -------------------- CASTIGAR
+                MOV largoCad, 40
+                IMP_CENTRAL linea1_CK12_A, linea2_CK12_A, linea3_CK12_A, linea4_CK12_A, linea5_CK12_A  
+                CURSOR 16, 53
+                RASTREO_TECLA 
+                            MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE FIN
+                ;NADA
+                JMP FIN 
+              
+              CK12B:;HISTORIA DECISION B
+                MOV largoCad, 40
+                IMP_CENTRAL linea1_CK12_B, linea2_CK12_B, linea3_CK12_B, linea4_CK12_B, linea5_CK12_B 
+                CURSOR 16, 53
+                RASTREO_TECLA 
+                            MOV AH, RASTREO
+            MOV AL, CARACTER
+                CMP AH, 1CH
+                JE FIN
+                ;NADA
+                JMP FIN  
+                
+            
+            
+              ;NO SE QUE PONER AQUI, MAYBE PUROS TEXTOS DE GRACIAS?
+              
+         ;-----------------------------------------TERMINA EDICION DE PAU ----------------------------         
+              
         RET
     ENDP
     
@@ -700,7 +1552,7 @@ INCLUDE macrosProyecto.lib
         
         ; 2. Crear archivo "DatosJugador.txt"
         ;CREAR_ARCHIVO rutaDatosJugador, 32        
-        ;MOV idDatosJugador, AX ; Recuperar id
+       ; MOV idDatosJugador, AX ; Recuperar id
         
         ; 3. Abrir archivo
         CALL LIMPIAR_REGS
@@ -729,11 +1581,11 @@ INCLUDE macrosProyecto.lib
         REEMPLAZAR_CADENA_PARTIDA posDatosPartida, estado
         
         ; 1. Crear la carpeta principal
-        ;CREAR_CARPETA rutaCarpeta
+        CREAR_CARPETA rutaCarpeta
         
         ; 2. Crear archivo "DatosPartida.txt"
-        ;CREAR_ARCHIVO rutaDatosPartida, 32        
-        ;MOV idDatosPartida, AX ; Recuperar id
+        CREAR_ARCHIVO rutaDatosPartida, 32        
+        MOV idDatosPartida, AX ; Recuperar id
         
         ; 3. Abrir archivo
         CALL LIMPIAR_REGS
@@ -889,6 +1741,51 @@ INCLUDE macrosProyecto.lib
                 JMP CICLO_EDO                                    
         FIN_LLENADO_PARTIDA:    
         RET
+    ENDP 
+    
+;--------------------------------------PANTALLA DE MUERTE UHHHHHHHHHH--------------------------------    
+    PANTALLA_MUERTE PROC
+        
+          CICLO:
+;COLOREAR TO       
+       MACRO_PANTALLA linea,80,REN,4
+    
+    ;LETRAS DE QUE MORISTE   
+    IMP_BADEND 4,4,frase,65,40h   
+    IMP_BADEND 5,4,frase2,63,40h
+    IMP_BADEND 6,4,frase3,63,40h
+    IMP_BADEND 7,4,frase4,63,40h
+    IMP_BADEND 8,4,frase5,63,40h
+    IMP_BADEND 9,4,frase6,65,40h
+     
+    
+     ; Imprime el cuadro central
+        IMP_COLOR_CURSOR 14, 28, renMenu, 15, 0H
+        IMP_COLOR_CURSOR 15, 28, renMenu, 15, 0H
+        IMP_COLOR_CURSOR 16, 28, renMenu, 15, 0H
+                                                   
+             ; Imprimir opciones
+        CALL IMPRIMIROPCIONES_INICIO
+        
+        MOV REN, 15
+        PEDIRTECLA_INICIO:
+            CALL IMPRIMIROPCIONES_INICIO                                        
+            CURSOR REN, 27            
+            MOV BL, REN
+            CMP BL, 15
+                JE SUBRAYADO1_INICIO                      
+                
+            SUBRAYADO1_INICIO:
+                IMP_COLOR_CURSOR 15, 28, msjPantallaPrincipal, 15, 0F0H
+                         
+        RET
+    ENDP        
+    
+    IMPRIMIROPCIONES_INICIO PROC
+        IMP_COLOR_CURSOR 15, 28, msjPantallaPrincipal, 15, 1EH
+        RET
+    ENDP
+      RET
     ENDP
            
 END

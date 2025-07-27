@@ -267,4 +267,34 @@
             INC SI            
             LOOP CICLODIS
     IMPRIMIR_LCDDISPLAY ENDM
+
+;--------------------MACROS PAU-------------------------------------
+
+MACRO_PANTALLA MACRO caracter,cantidad,REN,COLOR
+    MOV AH,19
+    LEA BP,caracter
+    MOV CX,cantidad
+    MOV DH,REN
+    MOV DL,0
+    MOV AL,0
+    MOV BL,COLOR ;color
+    MOV BH,0
+    INT 10H
+    
+    INC REN
+    CMP REN,24
+    JLE CICLO 
+MACRO_PANTALLA ENDM
+
+    IMP_BADEND MACRO  REN, COL, TEXTO, LONG, COLOR 
+        MOV AH, 19
+        MOV AL, 0
+        LEA BP, TEXTO
+        MOV CX, LONG
+        MOV DH, REN
+        MOV DL, COL
+        MOV BH,0
+        MOV BL, COLOR
+        INT 10H                        
+    IMP_BADEND ENDM
    ;=====================================================
