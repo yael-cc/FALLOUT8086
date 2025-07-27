@@ -273,7 +273,7 @@
         LOCAL RE_CAD
         LOCAL FIN_RECAD
         RE_CAD:
-            MOV AL, cadenaNueva[SI]
+            MOV AL, cadenaNueva[SI]    
             CMP AL, 0
                 JE FIN_RECAD
             MOV cadenaAnterior[SI], AL

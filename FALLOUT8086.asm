@@ -53,16 +53,16 @@ INCLUDE macrosProyecto.lib
     tituloForm db ' DATOS DEL JUGADOR '
     msjBienvenida db 'BIENVENIDO '
     rec     db 'Recursos =>'
-    tAgua   db 'Agua:'
-    tComida db 'Comida:'
-    tEnerg  db 'Energ',161,'a:'
-    tHab    db 'Habitantes:'
-    tAvan   db 'Avance:'
     rAgua   db '100',0
+    tAgua   db 'Agua:'
     rComida db '100',0
+    tComida db 'Comida:'
     rEnerg  db '100',0
+    tEnerg  db 'Energ',161,'a:'
+    rHab    db '100',0
+    tHab    db 'Habitantes:'
     rAvan   db '  1%',0
-    rHab    db '100',0    
+    tAvan   db 'Avance:'                            
     estado  db 'ESTABLE  ',0
     checkpoint db '1', 0
     msgEdo  db 'ESTADO: '
@@ -97,6 +97,14 @@ INCLUDE macrosProyecto.lib
     estMed  db 'INESTABLE',0      
     posDatosJugador dw 0
     posDatosPartida dw 0
+    matriz db 01111111b, 00001001b, 00001001b, 00001001b, 00000001b ; 2000h - 2004h
+           db 01111110b, 00001001b, 00001001b, 00001001b, 01111110b ; 2005h - 2009h
+           db 00111111b, 01000000b, 01000000b, 01000000b, 01000000b ; 200Ah - 200Eh
+           db 00111111b, 01000000b, 01000000b, 01000000b, 01000000b ; 200Fh - 2013h
+           db 00111110b, 01000001b, 01000001b, 01000001b, 00111110b ; 2014h - 2018h
+           db 01111111b, 01000000b, 01000000b, 01000000b, 01111111b ; 2019h - 201Dh
+           db 00000001b, 00000001b, 01111111b, 00000001b, 00000001b ; 201Eh - 2022h
+           db 00001100b, 00011110b, 00111100b, 00011110b, 00001100b ; 2023h - 2027h
     monte   db 10,13,'            :::::.                                                             '           
         db 10,13,'        -+*#########**+-                          .:::--::.                    '
         db 10,13,'    -*#################**+=:.              :=++***##########*+=:               '
@@ -164,6 +172,8 @@ INCLUDE macrosProyecto.lib
         IMP_COLOR_CURSOR 1, 75, rEnerg, 3, colorNormal      ; Energia
         IMP_COLOR_CURSOR 2, 59, rHab, 3, colorNormal        ; Habitantes
         IMP_COLOR_CURSOR 2, 70, rAvan, 4, colorNormal       ; Avance            
+        ; Mostrar habiantes y energia en devices
+        CALL SALIDA_HAB_ENR
         RET
     ENDP
     
@@ -229,6 +239,10 @@ INCLUDE macrosProyecto.lib
     PANTALLA_INICIO PROC
         MOV paginaAct, 0
         CALL CAMBIAR_PAGINA
+        ; SE LEEN DATOS DEL JUGADOR DESDE EL ARCHIVO (EVIDENCIABLE SOBRE TODO EN NOMBRE DE JUGADOR)
+        CALL EXTRAER_DATOS_JUGADOR
+        CALL EXTRAER_DATOS_PARTIDA
+        
         IMP_COLOR_CURSOR 13, 0, monte, 890, 0AH  ; Imprime el pasto    
         
         ; Coloca parametros previo a poner arboles
@@ -440,16 +454,15 @@ INCLUDE macrosProyecto.lib
         RET
     ENDP
     
-    PANTALLA_JUEGO PROC                              
-        ; SE LEEN DATOS DEL JUGADOR DESDE EL ARCHIVO (EVIDENCIABLE SOBRE TODO EN NOMBRE DE JUGADOR)
-        CALL EXTRAER_DATOS_JUGADOR
-        CALL EXTRAER_DATOS_PARTIDA
-        
+    PANTALLA_JUEGO PROC                                              
         ; Monito
         CALL LIMPIAR_REGS         
         IMP_COLOR_CURSOR 7, 0, monito, 475, 0BH      ; Monito
         
         CALL MARCO_PRINCIPAL
+        
+        ; Salida en Matrix Device del nombre del juego
+        CALL DIBUJAR_MATRIX
         
         ; LINEA SUPERIOR BAJA        
         ; Posicion
@@ -497,15 +510,16 @@ INCLUDE macrosProyecto.lib
         IMP_COLOR_CURSOR 10, 3, msgEdo, 8, colorDestacado   ; Titulo Estado
         IMP_COLOR_CURSOR 12, 3, estado, 9, colorNormal      ; Estado actual                                           
         
+        ; Registros
+        CALL LIMPIAR_REGS                                                        
+        ESTABLECER_HISTORIAL_ACTUAL reg1, reg2, reg3, reg4, reg5, reg6
+        IMP_COLOR_CURSOR 18, 28, tReg, 22, colorNormal   ; TITULO REGISTROS
+        
+        JMP SALTO_CHECKPOINT        
         CK1:                    
             ; Historia                                          
             MOV largoCad, 40
-            IMP_CENTRAL linea1_CK1, linea2_CK1, linea3_CK1, linea4_CK1, linea5_CK1 
-            
-            ; Registros
-            CALL LIMPIAR_REGS        
-            IMP_COLOR_CURSOR 18, 28, tReg, 22, colorNormal   ; TITULO REGISTROS                                    
-            ESTABLECER_HISTORIAL_ACTUAL reg1, reg2, reg3, reg4, reg5, reg6
+            IMP_CENTRAL linea1_CK1, linea2_CK1, linea3_CK1, linea4_CK1, linea5_CK1                         
             
             ; Checkpoint
             IMP_COLOR_CURSOR 5, 62, msjCK, 13, colorDestacado
@@ -516,7 +530,7 @@ INCLUDE macrosProyecto.lib
             IMP_COLOR_CURSOR 16, 28, msjOpcionPrincipal, 23, colorDestacado
             CURSOR 16, 53
             RASTREO_TECLA
-            RECORRER_HISTORIAL regCK2
+            
             MOV AH, RASTREO
             MOV AL, CARACTER
                         
@@ -528,6 +542,8 @@ INCLUDE macrosProyecto.lib
             JMP CK1                
             
         CK2:
+            ; Registros
+            RECORRER_HISTORIAL regCK2
             MOV checkpoint, '2'                
             ; Historia                                          
             MOV largoCad, 40
@@ -559,6 +575,7 @@ INCLUDE macrosProyecto.lib
     
     
     VOLVER_INICIO:
+        CALL LIMPIAR_PANTALLA
         MOV paginaAct, 0
         CALL CAMBIAR_PAGINA
         MOV REN, 15
@@ -937,6 +954,7 @@ INCLUDE macrosProyecto.lib
             CMP AL, 39H
             JA FINHAB_SEG
             SUB AL, 30H
+            MOV BX, 0
             MOV BL, AL
             MOV AL, segmentos[BX]
             OUT DX, AL
@@ -958,6 +976,7 @@ INCLUDE macrosProyecto.lib
             CMP AL, 39H
             JA FINENR_SEG
             SUB AL, 30H
+            MOV BX, 0
             MOV BL, AL
             MOV AL, segmentos[BX]
             OUT DX, AL
@@ -1002,20 +1021,54 @@ INCLUDE macrosProyecto.lib
     ENDP
     
     ANALIZAR_RADIACION PROC     ; Analiza la temperatura que queda al apagar (radiación registrada)
-        MOV AL, radiacion
-        CMP AL, 20 
-            JBE RAD_EST
+        MOV AL, radiacion[0]
+        CMP AL, 40 
+            JLE RAD_EST
         CMP AL, 100
-            JAE RAD_PELIGRO     
+            JGE RAD_PELIGRO     
         JMP RAD_MED                  
         RAD_EST:
-            REEMPLAZAR_CADENA estado, estNorm    
+            REEMPLAZAR_CADENA estado, estNorm
+            JMP FIN_ANRAD    
         RAD_MED:
-            REEMPLAZAR_CADENA estado, estPel
-        RAD_PELIGRO:        
             REEMPLAZAR_CADENA estado, estMed
+            JMP FIN_ANRAD
+        RAD_PELIGRO:        
+            REEMPLAZAR_CADENA estado, estPel
         FIN_ANRAD:        
         RET
     ENDP
+    
+    DIBUJAR_MATRIX PROC
+        ; Inicio
+    	MOV DX,2000h ; Input columna 1 del display 1
+    	MOV BX,0     ; Contador de columnas totales
+        display_matrix:
+    	MOV SI,0     ; Contador de columnas en matríz
+    	MOV CX,5     ; Cada display tiene 5 columnas
+        columna_matrix:
+    	MOV AL,matriz[BX][SI] ; Matríz de puntos
+    	OUT DX,AL           ; Output en columna
+    	INC SI              ; Siguiente columna en matríz
+    	INC DX              ; Siguiente columna en display 
+        ; Si columna actual != 5
+    	CMP SI,5       ; Repite ciclo de columnas
+    	LOOPNE columna_matrix      
+        ; SOLO cuando columna actual = 5                   
+    	ADD BX,5       ; Añade 5 a columnas totales
+    	CMP BX,40      ; Si columnas totales < 40
+    	JL display_matrix     ; Pasa al siguiente display
+        
+        RET
+    ENDP    
+    
+    SALTO_CHECKPOINT:
+        MOV AL, checkpoint
+        CMP AL, '1'
+            JE CK1
+        CMP AL, '2'
+            JE CK2
+        CMP AL, '3'        
+            JE CK3      
            
 END
