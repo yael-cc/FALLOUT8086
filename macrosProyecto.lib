@@ -282,4 +282,82 @@
         FIN_RECAD:
         MOV SI, 0
     REEMPLAZAR_CADENA ENDM
+
+SUMAR_RECURSO MACRO REC, CANT
+        ; INICIALIZAMOS
+        MOV AX, 0
+        MOV BX, 0
+        
+        MOV AL, REC[0]  ; MOVER DECENAS
+        SUB AL, 30H     ; QUITAR ASCII
+        MOV BL, 10      ; MULTIPLICAR X 10
+        MUL BL          ; OPERAMOS
+        MOV AH, AL      ; MOVEMOS DECENAS A AH
+        MOV AL, REC[1]  ; MOVEMOS UNIDADES
+        SUB AL, 30H     ; QUITAMOS ASCII
+        
+        ADD AL, AH      ; SUMAMOS DECENAS Y UNIDADES
+        MOV AH, 0       ; DEJAMOS EN 0 AH
+        ADD AL, CANT    ; SUMAMOS LA CANTIDAD
+        MOV BL, 1       ; TRUCO
+        MUL BL       
+        AAM             ; DIVIDIMOS EN DECENAS Y UNIDADES
+        ADD AX, 3030H   ; VOLVEMOS ASCII
+        MOV REC[0], AH
+        MOV REC[1], AL
+    SUMAR_RECURSO ENDM
+    
+    RESTAR_RECURSO MACRO REC, CANT
+        ; INICIALIZAMOS
+        MOV AX, 0
+        MOV BX, 0
+        
+        MOV AL, REC[0]  ; MOVER DECENAS
+        SUB AL, 30H     ; QUITAR ASCII
+        MOV BL, 10      ; MULTIPLICAR X 10
+        MUL BL          ; OPERAMOS
+        MOV AH, AL      ; MOVEMOS DECENAS A AH
+        MOV AL, REC[1]  ; MOVEMOS UNIDADES
+        SUB AL, 30H     ; QUITAMOS ASCII
+        
+        ADD AL, AH      ; SUMAMOS DECENAS Y UNIDADES
+        MOV AH, 0       ; DEJAMOS EN 0 AH
+        SUB AL, CANT    ; RESTAMOS LA CANTIDAD
+        MOV BL, 1       ; TRUCO
+        MUL BL       
+        AAM             ; DIVIDIMOS EN DECENAS Y UNIDADES
+        ADD AX, 3030H   ; VOLVEMOS ASCII
+        MOV REC[0], AH
+        MOV REC[1], AL
+    RESTAR_RECURSO ENDM
+
+;--------------------MACROS PAU-------------------------------------
+
+MACRO_PANTALLA MACRO caracter,cantidad,REN,COLOR
+    MOV AH,19
+    LEA BP,caracter
+    MOV CX,cantidad
+    MOV DH,REN
+    MOV DL,0
+    MOV AL,0
+    MOV BL,COLOR ;color
+    MOV BH,paginaAct
+    INT 10H
+    
+    INC REN
+    CMP REN,24
+    JLE CICLO 
+MACRO_PANTALLA ENDM
+
+    IMP_BADEND MACRO  REN, COL, TEXTO, LONG, COLOR 
+        MOV AH, 19
+        MOV AL, 0
+        LEA BP, TEXTO
+        MOV CX, LONG
+        MOV DH, REN
+        MOV DL, COL
+        MOV BH, paginaAct
+        MOV BL, COLOR
+        INT 10H                        
+    IMP_BADEND ENDM
    ;=====================================================
